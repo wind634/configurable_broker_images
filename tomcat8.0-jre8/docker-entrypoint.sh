@@ -45,7 +45,6 @@
 # TOMCAT_CATALINA_JVM_XSS  每个线程的栈大小  数字类型
 
 # ====== catalina.sh 涉及的环境变量 end ======
-
 val=""
 
 # 读取环境变量的值
@@ -233,7 +232,9 @@ do
     else
         case $arg in
             "TOMCAT_CONTEXT_RESOURCE_NAME")
-                contextStr+=" name=\\\"${val}\\\" "
+                #格式化带斜杠'/'的字符串
+                formatVal=`echo $val | sed -e 's/\//\\\\\//g'`
+                contextStr+=" name=\\\"${formatVal}\\\" "
             ;;
             "TOMCAT_CONTEXT_RESOURCE_USERNAME")
                 contextStr+=" username=\\\"${val}\\\" "
@@ -245,7 +246,8 @@ do
                 contextStr+=" driverClassName=\\\"${val}\\\" "
             ;;
             "TOMCAT_CONTEXT_RESOURCE_URL")
-                contextStr+=" url=\\\"${val}\\\" "
+                formatVal=`echo $val | sed -e 's/\//\\\\\//g'`
+                contextStr+=" url=\\\"${formatVal}\\\" "
             ;;
             *)
                 contextStr+=" "
@@ -255,10 +257,9 @@ do
 done
 if [ "$contextStr" = "" ]
 then
-    echo $contextStr
+    :
 else
     contextStr="<Resource type=\\\"javax.sql.DataSource\\\" "$contextStr" \/>"
-    echo $contextStr
 fi
 
 # 将serverStr替换进server.xml文件里
@@ -286,7 +287,7 @@ do
                     catalinaStr+=" -Xms${val}m "
                 else  
                     echo $arg'值不合法'  
-                fi 
+                fi
             ;;
             "TOMCAT_CATALINA_JVM_XMX")
                 if grep '^[[:digit:]]*$' <<< "$val";then  
