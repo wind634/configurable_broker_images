@@ -94,14 +94,15 @@ do
                 then
                     :
                 else    
-                    server_env=($server_env $env_key)
+                    server_env+=($env_key)
             fi
         ;;
         "TOMCAT_CONTEXT_"*) 
-            context_env=($context_env $env_key)
+            context_env+=($env_key)
         ;;
         "TOMCAT_CATALINA_"*) 
-            catalina_env=($catalina_env $env_key)
+            catalina_env+=($env_key)
+            echo "数组的元素为: ${catalina_env[@]}"
         ;;
         *) 
             :
@@ -110,163 +111,162 @@ do
     
 done
 
-
-# ============== server.xml 配置 ==============
-serverStr=""
-# 遍历数组
-for ((i=0;i<${#server_env[@]};i++))
-do
-    arg=${server_env[$i]}
-	echo "获取环境变量${arg}的值..."
-    get_env $arg
-    # 如果取到变量的值
-    if [ "$val" = "" ]
-    then
-        echo '环境变量 '$arg' 未设置'
-        case $arg in 
-            "TOMCAT_SERVER_URI_ENCODING")
-                # 如果编码未设置, 默认为utf-8
-                serverStr+=" URIEncoding=\\\"UTF8\\\" "
-            ;;
-            "TOMCAT_SERVER_CONNECTION_TIMEOUT")
-                # 默认20000
-                serverStr+=" connectionTimeout=\\\"20000\\\" "
-            ;;
-        esac    
-    else
-    	case $arg in 
-            # 字符编码
-            "TOMCAT_SERVER_URI_ENCODING")
-                serverStr+=" URIEncoding=\\\"${val}\\\" "
-            ;;
-            # 连接超时
-            "TOMCAT_SERVER_CONNECTION_TIMEOUT")
-                 # 判断是不是数字
-                if grep '^[[:digit:]]*$' <<< "$val";then  
-                   echo "$val is number."  
-                   serverStr+=" connectionTimeout=\\\"${val}\\\" "
-                else  
-                   echo $arg'值不合法'  
-                fi 
-            ;;
-            # 最大线程数
-    		"TOMCAT_SERVER_MAX_THREADS")
-                # 判断是不是数字
-                if grep '^[[:digit:]]*$' <<< "$val";then  
-                   echo "$val is number."  
-                   serverStr+=" maxThreads=\\\"${val}\\\" "
-                else  
-                   echo $arg'值不合法'  
-                fi  
-    		;;
-            # 最小线程数
-            "TOMCAT_SERVER_MIN_SPARE_THREADS")
-                # 判断是不是数字
-                if grep '^[[:digit:]]*$' <<< "$val";then  
-                   echo "$val is number."  
-                   serverStr+=" minSpareThreads=\\\"${val}\\\" "
-                else  
-                   echo $arg'值不合法'  
-                fi  
-            ;;
-            # 上传超时机制
-            "TOMCAT_SERVER_DISABLE_UPLOAD_TIMEOUT")
-                serverStr+=" disableUploadTimeout=\\\"${val}\\\" "
-            ;;
-            # 上传超时时间
-            "TOMCAT_SERVER_CONNECTION_UPLOAD_TIMEOUT")
-                if grep '^[[:digit:]]*$' <<< "$val";then  
-                   echo "$val is number."  
-                   serverStr+=" connectionUploadTimeout=\\\"${val}\\\" "
-                else  
-                   echo $arg'值不合法'  
-                fi 
-            ;;
-            # 是否反查询域名
-            "TOMCAT_SERVER_ENABLE_LOOKUPS")
-                serverStr+=" enableLookups=\\\"${val}\\\" "
-            ;;
-            # 连接最大保持时间（毫秒）
-            "TOMCAT_SERVER_KEEP_ALIVE_TIMEOUT")
-                if grep '^[[:digit:]]*$' <<< "$val";then  
-                   echo "$val is number."  
-                   serverStr+=" keepAliveTimeout=\\\"${val}\\\" "
-                else  
-                   echo $arg'值不合法'  
-                fi 
-            ;;
-            # 响应的数据进行 GZIP 压缩
-            "TOMCAT_SERVER_COMPRESSION")
-                serverStr+=" compression=\\\"${val}\\\" "
-            ;;
-            # 压缩类型
-            "TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE")
-                serverStr+=" compressableMimeType=\\\"${val}\\\" "
-            ;;
-    		*)
-    			serverStr+=" "
-    		;;
-    	esac
-    fi
-done
-
-echo $serverStr
-
-# 将serverStr替换进server.xml文件里
-sedCmd="s/{{serverArgs}}/${serverStr}/"
-echo "$sedCmd"
-sed -i "$sedCmd" /usr/local/tomcat/conf/server.xml 
-# ============== server.xml 配置 ==============
-
-# ============== content.xml 配置 ==============
-contextStr=""
-# 遍历数组
-for ((i=0;i<${#context_env[@]};i++))
-do
-    arg=${context_env[$i]}
-    echo "获取环境变量${arg}的值..."
-    get_env $arg
-    # 如果取到变量的值
-    if [ "$val" = "" ]
-    then
-        echo '环境变量 '$arg' 未设置'
-    else
-        case $arg in 
-            "TOMCAT_CONTEXT_RESOURCE_NAME")
-                contextStr+=" name=\\\"${val}\\\" "
-            ;;
-            "TOMCAT_CONTEXT_RESOURCE_USERNAME")
-                contextStr+=" username=\\\"${val}\\\" "
-            ;;
-            "TOMCAT_CONTEXT_RESOURCE_PASSWORD")
-                contextStr+=" password=\\\"${val}\\\" "
-            ;;
-            "TOMCAT_CONTEXT_RESOURCE_DRIVER_CLASS_NAME")
-                contextStr+=" driverClassName=\\\"${val}\\\" "
-            ;;
-            "TOMCAT_CONTEXT_RESOURCE_URL")
-                contextStr+=" url=\\\"${val}\\\" "
-            ;;
-            *)
-                contextStr+=" "
-            ;;
-        esac
-    fi
-done
-if [ "$contextStr" = "" ]
-then
-    echo $contextStr
-else
-    contextStr="<Resource type=\\\"javax.sql.DataSource\\\" "$contextStr" \/>" 
-    echo $contextStr
-fi
-
-# 将serverStr替换进server.xml文件里
-sedCmd="s/{{Resource}}/${contextStr}/"
-echo "$sedCmd"
-sed -i "$sedCmd" /usr/local/tomcat/conf/context.xml
-
-# ============== content.xml 配置 ==============
+## ============== server.xml 配置 ==============
+#serverStr=""
+## 遍历数组
+#for ((i=0;i<${#server_env[@]};i++))
+#do
+#    arg=${server_env[$i]}
+#	echo "获取环境变量${arg}的值..."
+#    get_env $arg
+#    # 如果取到变量的值
+#    if [ "$val" = "" ]
+#    then
+#        echo '环境变量 '$arg' 未设置'
+#        case $arg in
+#            "TOMCAT_SERVER_URI_ENCODING")
+#                # 如果编码未设置, 默认为utf-8
+#                serverStr+=" URIEncoding=\\\"UTF8\\\" "
+#            ;;
+#            "TOMCAT_SERVER_CONNECTION_TIMEOUT")
+#                # 默认20000
+#                serverStr+=" connectionTimeout=\\\"20000\\\" "
+#            ;;
+#        esac
+#    else
+#    	case $arg in
+#            # 字符编码
+#            "TOMCAT_SERVER_URI_ENCODING")
+#                serverStr+=" URIEncoding=\\\"${val}\\\" "
+#            ;;
+#            # 连接超时
+#            "TOMCAT_SERVER_CONNECTION_TIMEOUT")
+#                 # 判断是不是数字
+#                if grep '^[[:digit:]]*$' <<< "$val";then
+#                   echo "$val is number."
+#                   serverStr+=" connectionTimeout=\\\"${val}\\\" "
+#                else
+#                   echo $arg'值不合法'
+#                fi
+#            ;;
+#            # 最大线程数
+#    		"TOMCAT_SERVER_MAX_THREADS")
+#                # 判断是不是数字
+#                if grep '^[[:digit:]]*$' <<< "$val";then
+#                   echo "$val is number."
+#                   serverStr+=" maxThreads=\\\"${val}\\\" "
+#                else
+#                   echo $arg'值不合法'
+#                fi
+#    		;;
+#            # 最小线程数
+#            "TOMCAT_SERVER_MIN_SPARE_THREADS")
+#                # 判断是不是数字
+#                if grep '^[[:digit:]]*$' <<< "$val";then
+#                   echo "$val is number."
+#                   serverStr+=" minSpareThreads=\\\"${val}\\\" "
+#                else
+#                   echo $arg'值不合法'
+#                fi
+#            ;;
+#            # 上传超时机制
+#            "TOMCAT_SERVER_DISABLE_UPLOAD_TIMEOUT")
+#                serverStr+=" disableUploadTimeout=\\\"${val}\\\" "
+#            ;;
+#            # 上传超时时间
+#            "TOMCAT_SERVER_CONNECTION_UPLOAD_TIMEOUT")
+#                if grep '^[[:digit:]]*$' <<< "$val";then
+#                   echo "$val is number."
+#                   serverStr+=" connectionUploadTimeout=\\\"${val}\\\" "
+#                else
+#                   echo $arg'值不合法'
+#                fi
+#            ;;
+#            # 是否反查询域名
+#            "TOMCAT_SERVER_ENABLE_LOOKUPS")
+#                serverStr+=" enableLookups=\\\"${val}\\\" "
+#            ;;
+#            # 连接最大保持时间（毫秒）
+#            "TOMCAT_SERVER_KEEP_ALIVE_TIMEOUT")
+#                if grep '^[[:digit:]]*$' <<< "$val";then
+#                   echo "$val is number."
+#                   serverStr+=" keepAliveTimeout=\\\"${val}\\\" "
+#                else
+#                   echo $arg'值不合法'
+#                fi
+#            ;;
+#            # 响应的数据进行 GZIP 压缩
+#            "TOMCAT_SERVER_COMPRESSION")
+#                serverStr+=" compression=\\\"${val}\\\" "
+#            ;;
+#            # 压缩类型
+#            "TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE")
+#                serverStr+=" compressableMimeType=\\\"${val}\\\" "
+#            ;;
+#    		*)
+#    			serverStr+=" "
+#    		;;
+#    	esac
+#    fi
+#done
+#
+#echo $serverStr
+#
+## 将serverStr替换进server.xml文件里
+#sedCmd="s/{{serverArgs}}/${serverStr}/"
+#echo "$sedCmd"
+#sed -i "$sedCmd" /usr/local/tomcat/conf/server.xml
+## ============== server.xml 配置 ==============
+#
+## ============== content.xml 配置 ==============
+#contextStr=""
+## 遍历数组
+#for ((i=0;i<${#context_env[@]};i++))
+#do
+#    arg=${context_env[$i]}
+#    echo "获取环境变量${arg}的值..."
+#    get_env $arg
+#    # 如果取到变量的值
+#    if [ "$val" = "" ]
+#    then
+#        echo '环境变量 '$arg' 未设置'
+#    else
+#        case $arg in
+#            "TOMCAT_CONTEXT_RESOURCE_NAME")
+#                contextStr+=" name=\\\"${val}\\\" "
+#            ;;
+#            "TOMCAT_CONTEXT_RESOURCE_USERNAME")
+#                contextStr+=" username=\\\"${val}\\\" "
+#            ;;
+#            "TOMCAT_CONTEXT_RESOURCE_PASSWORD")
+#                contextStr+=" password=\\\"${val}\\\" "
+#            ;;
+#            "TOMCAT_CONTEXT_RESOURCE_DRIVER_CLASS_NAME")
+#                contextStr+=" driverClassName=\\\"${val}\\\" "
+#            ;;
+#            "TOMCAT_CONTEXT_RESOURCE_URL")
+#                contextStr+=" url=\\\"${val}\\\" "
+#            ;;
+#            *)
+#                contextStr+=" "
+#            ;;
+#        esac
+#    fi
+#done
+#if [ "$contextStr" = "" ]
+#then
+#    echo $contextStr
+#else
+#    contextStr="<Resource type=\\\"javax.sql.DataSource\\\" "$contextStr" \/>"
+#    echo $contextStr
+#fi
+#
+## 将serverStr替换进server.xml文件里
+#sedCmd="s/{{Resource}}/${contextStr}/"
+#echo "$sedCmd"
+#sed -i "$sedCmd" /usr/local/tomcat/conf/context.xml
+#
+## ============== content.xml 配置 ==============
 
 # ============== catalina.sh 配置 ==============
 catalinaStr=""
@@ -311,10 +311,10 @@ done
 
 echo $catalinaStr
 
-sedCmd="s/{{JAVA_OPTS}}/${catalinaStr}/"
-echo "$sedCmd"
-sed -i "$sedCmd" /usr/local/tomcat/bin/catalina.sh 
-# ============== catalina.sh 配置 ==============
-
-
-exec "$@"
+#sedCmd="s/{{JAVA_OPTS}}/${catalinaStr}/"
+#echo "$sedCmd"
+#sed -i "$sedCmd" /usr/local/tomcat/bin/catalina.sh
+## ============== catalina.sh 配置 ==============
+#
+#
+#exec "$@"
