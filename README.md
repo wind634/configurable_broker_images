@@ -26,7 +26,7 @@
 | TOMCAT_CONTEXT_RESOURCE        | jndi数据源配置      |   字符串类型    |   |
 
 * TOMCAT_CONTEXT_RESOURCE 字符串格式类似这样 用 jndiname | username | password | drive_class_name | url；允许空格
-* 示例 `jndiname | root | 634234 | com.mysql.jdbc.Driver | jdbc:mysql://localhost:3306/testSite`
+* 示例 `jndiname1 | root | 634234 | com.mysql.jdbc.Driver | jdbc:mysql://localhost:3306/testSite;jndiname2 | root | 634234 | com.mysql.jdbc.Driver | jdbc:mysql://localhost:3306/testSite2`
 * jndiname, 指定的jndi名称, 字符串类型
 * username, 数据库用户名, 字符串类型
 * password, 数据库密码, 字符串类型
