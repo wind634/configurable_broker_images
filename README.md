@@ -23,11 +23,16 @@
 
 | 环境变量名称        |   描述    |  类型  |  取值范围
 | --------   | -----   | :----: | :----: |
-| TOMCAT_CONTEXT_RESOURCE_NAME        | 指定的jndi名称      |   字符串类型    |   |
-| TOMCAT_CONTEXT_RESOURCE_USERNAME        | 数据库用户名      |   字符串类型    |   |
-| TOMCAT_CONTEXT_RESOURCE_PASSWORD        | 数据库密码      |   字符串类型    |   |
-| TOMCAT_CONTEXT_RESOURCE_DRIVER_CLASS_NAME        | 数据库驱动类名称      |  字符串类型    |   |
-| TOMCAT_CONTEXT_RESOURCE_URL        | 数据库url      |   字符串类型    |   |
+| TOMCAT_CONTEXT_RESOURCE        | jndi数据源配置      |   字符串类型    |   |
+
+* TOMCAT_CONTEXT_RESOURCE 字符串格式类似这样 用 jndiname | username | password | drive_class_name | url；允许空格
+* 示例 `jndiname | root | 634234 | com.mysql.jdbc.Driver | jdbc:mysql://localhost:3306/testSite`
+* jndiname, 指定的jndi名称, 字符串类型
+* username, 数据库用户名, 字符串类型
+* password, 数据库密码, 字符串类型
+* drive_class_name, 数据库驱动类名称, 字符串类型
+* url, 指定的jndi名称, 字符串类型
+
 
 # catalina.sh 涉及的环境变量
 
