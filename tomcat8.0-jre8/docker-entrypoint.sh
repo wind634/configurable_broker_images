@@ -28,13 +28,8 @@
 
 
 # ====== context.xml 涉及的环境变量 start ======
-
-# TOMCAT_CONTEXT_RESOURCE_NAME 指定的jndi名称 字符串类型
-# TOMCAT_CONTEXT_RESOURCE_USERNAME  数据库用户名 字符串类型
-# TOMCAT_CONTEXT_RESOURCE_PASSWORD  数据库密码 字符串类型
-# TOMCAT_CONTEXT_RESOURCE_DRIVER_CLASS_NAME 数据库驱动类名称 字符串类型
-# TOMCAT_CONTEXT_RESOURCE_URL 数据库url 字符串类型
-
+# TOMCAT_CONTEXT_RESOURCE jndi数据源配置字符串
+# 示例 jndiname1 | root | 634234 | com.mysql.jdbc.Driver | jdbc:mysql://localhost:3306/testSite; jndiname2 | root | 634234 | com.mysql.jdbc.Driver | jdbc:mysql://localhost:3306/testSite2
 # ====== context.xml 涉及的环境变量 end ======
 
 
@@ -231,36 +226,64 @@ do
         echo '环境变量 '$arg' 未设置'
     else
         case $arg in
-            "TOMCAT_CONTEXT_RESOURCE_NAME")
-                #格式化带斜杠'/'的字符串
-                formatVal=`echo $val | sed -e 's/\//\\\\\//g'`
-                contextStr+=" name=\\\"${formatVal}\\\" "
-            ;;
-            "TOMCAT_CONTEXT_RESOURCE_USERNAME")
-                contextStr+=" username=\\\"${val}\\\" "
-            ;;
-            "TOMCAT_CONTEXT_RESOURCE_PASSWORD")
-                contextStr+=" password=\\\"${val}\\\" "
-            ;;
-            "TOMCAT_CONTEXT_RESOURCE_DRIVER_CLASS_NAME")
-                contextStr+=" driverClassName=\\\"${val}\\\" "
-            ;;
-            "TOMCAT_CONTEXT_RESOURCE_URL")
-                formatVal=`echo $val | sed -e 's/\//\\\\\//g'`
-                contextStr+=" url=\\\"${formatVal}\\\" "
+            "TOMCAT_CONTEXT_RESOURCE")
+                #  去空格
+                formatVal=`echo $val | sed s/[[:space:]]//g`
+                # 以英文分号";"分隔字符
+                formatVal=${formatVal//;/ }    #这里是将var中的,替换为空格
+                resourceStr=""
+                for element in $formatVal
+                do
+                    resourceStr+="<Resource type=\\\"javax.sql.DataSource\\\" "
+                    echo $element
+                    # 以竖线分隔每一个字符串
+                    OLD_IFS="$IFS"
+                    IFS="|"
+                    resourceArgs=($element)
+                    IFS="$OLD_IFS"
+                    for i in ${!resourceArgs[@]}
+                    do
+#                       echo ${resourceArgs[$i]}
+                        if [ "$i" == "0" ]
+                            then
+                                # jndi名称
+                                resourceStr+=" name=\\\"${resourceArgs[$i]}\\\" "
+                        elif [ "$i" == "1" ]
+                            then
+                                # 数据库用户名
+                                resourceStr+=" username=\\\"${resourceArgs[$i]}\\\" "
+                        elif [ "$i" == "2" ]
+                            then
+                                # 数据密码
+                                resourceStr+=" password=\\\"${resourceArgs[$i]}\\\" "
+                        elif [ "$i" == "3" ]
+                            then
+                                # jdbc驱动类名称
+                                resourceStr+=" driverClassName=\\\"${resourceArgs[$i]}\\\" "
+                        elif [ "$i" == "4" ]
+                            then
+                                # 数据库url
+                                resourceStr+=" url=\\\"${resourceArgs[$i]}\\\" "
+                        fi
+                    done
+
+                    resourceStr+=" />"
+                done
+
+                # 格式化带斜杠'/'的字符串
+                formatVal=`echo $resourceStr | sed -e 's/\//\\\\\//g'`
+                contextStr+=$formatVal" "
             ;;
             *)
-                contextStr+=" "
+                 contextStr+=" "
             ;;
         esac
     fi
 done
-if [ "$contextStr" = "" ]
-then
-    :
-else
-    contextStr="<Resource type=\\\"javax.sql.DataSource\\\" "$contextStr" \/>"
-fi
+
+echo "contextStr:"$contextStr
+#exit 0
+
 
 # 将serverStr替换进server.xml文件里
 sedCmd="s/{{Resource}}/${contextStr}/"
