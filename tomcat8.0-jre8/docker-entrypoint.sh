@@ -180,7 +180,7 @@ do
             "TOMCAT_SERVER_ENABLE_LOOKUPS")
                 serverStr+=" enableLookups=\\\"${val}\\\" "
             ;;
-            # 连接最大保持时间（毫秒）
+            # 连接最大保持时间（秒）
             "TOMCAT_SERVER_KEEP_ALIVE_TIMEOUT")
                 if grep '^[[:digit:]]*$' <<< "$val";then
                    echo "$val is number."
@@ -307,21 +307,21 @@ do
         case $arg in 
             "TOMCAT_CATALINA_JVM_XMS")
                 if grep '^[[:digit:]]*$' <<< "$val";then  
-                    catalinaStr+=" -Xms${val}m "
+                    catalinaStr+=" -Xms${val}k "
                 else  
                     echo $arg'值不合法'  
                 fi
             ;;
             "TOMCAT_CATALINA_JVM_XMX")
                 if grep '^[[:digit:]]*$' <<< "$val";then  
-                    catalinaStr+=" -Xmx${val}m "
+                    catalinaStr+=" -Xmx${val}k "
                 else  
                    echo $arg'值不合法'  
                 fi 
             ;;
             "TOMCAT_CATALINA_JVM_XSS")
                 if grep '^[[:digit:]]*$' <<< "$val";then  
-                    catalinaStr+=" -Xss${val}m "
+                    catalinaStr+=" -Xss${val}k "
                 else  
                     echo $arg'值不合法'  
                 fi 
