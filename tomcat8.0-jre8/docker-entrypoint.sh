@@ -282,7 +282,6 @@ do
 done
 
 echo "contextStr:"$contextStr
-#exit 0
 
 
 # 将serverStr替换进server.xml文件里

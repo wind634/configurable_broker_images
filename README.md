@@ -32,7 +32,7 @@
 * username, 数据库用户名, 字符串类型
 * password, 数据库密码, 字符串类型
 * drive_class_name, 数据库驱动类名称, 字符串类型
-* url, 指定的jndi名称, 字符串类型
+* url, 数据库uri, 字符串类型
 
 
 # catalina.sh 涉及的环境变量
