@@ -123,7 +123,7 @@ do
                 serverStr+=" URIEncoding=\\\"UTF8\\\" "
             ;;
             "TOMCAT_SERVER_CONNECTION_TIMEOUT")
-                # 默认20000
+                # 默认连接超时时间是20000ms
                 serverStr+=" connectionTimeout=\\\"20000\\\" "
             ;;
         esac
@@ -131,14 +131,43 @@ do
     	case $arg in
             # 字符编码
             "TOMCAT_SERVER_URI_ENCODING")
-                serverStr+=" URIEncoding=\\\"${val}\\\" "
+                # 目前只接收UTF8/GBK/GB2312/ISO-8859-1,其他值过滤
+                pass="F"
+                case $val in 
+                    "UTF8")
+                       pass="T" 
+                    ;;
+                    "GBK")
+                       pass="T" 
+                    ;;
+                    "GB2312")
+                       pass="T" 
+                    ;;
+                    "ISO-8859-1")
+                       pass="T" 
+                    ;;
+                    *)
+                        pass="F" 
+                    ;;
+                esac    
+                if [ "$pass" = "T" ]
+                    then
+                    serverStr+=" URIEncoding=\\\"${val}\\\" "
+                else
+                    serverStr+=" URIEncoding=\\\"UTF8\\\" "
+                fi    
             ;;
             # 连接超时
             "TOMCAT_SERVER_CONNECTION_TIMEOUT")
                  # 判断是不是数字
                 if grep '^[[:digit:]]*$' <<< "$val";then
-                   echo "$val is number."
-                   serverStr+=" connectionTimeout=\\\"${val}\\\" "
+                    # 判断是否大于0
+                    if [ $val -gt 0 ]  
+                    then
+                        serverStr+=" connectionTimeout=\\\"${val}\\\" "
+                    else    
+                        echo $arg'值小于0'
+                    fi        
                 else
                    echo $arg'值不合法'
                 fi
@@ -147,8 +176,13 @@ do
     		"TOMCAT_SERVER_MAX_THREADS")
                 # 判断是不是数字
                 if grep '^[[:digit:]]*$' <<< "$val";then
-                   echo "$val is number."
-                   serverStr+=" maxThreads=\\\"${val}\\\" "
+                    # 判断是否大于0
+                    if [ $val -gt 0 ]  
+                    then 
+                        serverStr+=" maxThreads=\\\"${val}\\\" "
+                    else    
+                        echo $arg'值小于0'
+                    fi     
                 else
                    echo $arg'值不合法'
                 fi
@@ -157,44 +191,118 @@ do
             "TOMCAT_SERVER_MIN_SPARE_THREADS")
                 # 判断是不是数字
                 if grep '^[[:digit:]]*$' <<< "$val";then
-                   echo "$val is number."
-                   serverStr+=" minSpareThreads=\\\"${val}\\\" "
+                   # 判断是否大于0
+                    if [ $val -gt 0 ]  
+                    then 
+                        serverStr+=" minSpareThreads=\\\"${val}\\\" "
+                    else    
+                        echo $arg'值小于0'
+                    fi    
                 else
                    echo $arg'值不合法'
                 fi
             ;;
             # 上传超时机制
             "TOMCAT_SERVER_DISABLE_UPLOAD_TIMEOUT")
-                serverStr+=" disableUploadTimeout=\\\"${val}\\\" "
+                # 值为 true或者false 其他过滤
+                pass="F"
+                case $val in 
+                    "true")
+                       pass="T" 
+                    ;;
+                    "false")
+                       pass="T" 
+                    ;;
+                    *)
+                        pass="F" 
+                    ;;
+                esac    
+                if [ "$pass" = "T" ]
+                    then
+                    serverStr+=" disableUploadTimeout=\\\"${val}\\\" "
+                else
+                    serverStr+=" disableUploadTimeout=\\\"false\\\" "
+                fi    
             ;;
             # 上传超时时间
             "TOMCAT_SERVER_CONNECTION_UPLOAD_TIMEOUT")
                 if grep '^[[:digit:]]*$' <<< "$val";then
-                   echo "$val is number."
-                   serverStr+=" connectionUploadTimeout=\\\"${val}\\\" "
+                   # 判断是否大于0
+                    if [ $val -gt 0 ]  
+                    then 
+                        serverStr+=" connectionUploadTimeout=\\\"${val}\\\" "
+                    else    
+                        echo $arg'值小于0'
+                    fi  
                 else
                    echo $arg'值不合法'
                 fi
             ;;
             # 是否反查询域名
             "TOMCAT_SERVER_ENABLE_LOOKUPS")
-                serverStr+=" enableLookups=\\\"${val}\\\" "
+                # 值为 true或者false 其他过滤
+                pass="F"
+                case $val in 
+                    "true")
+                       pass="T" 
+                    ;;
+                    "false")
+                       pass="T" 
+                    ;;
+                    *)
+                        pass="F" 
+                    ;;
+                esac    
+                if [ "$pass" = "T" ]
+                    then
+                    serverStr+=" enableLookups=\\\"${val}\\\" "
+                else
+                    serverStr+=" enableLookups=\\\"true\\\" "
+                fi    
             ;;
             # 连接最大保持时间（秒）
             "TOMCAT_SERVER_KEEP_ALIVE_TIMEOUT")
                 if grep '^[[:digit:]]*$' <<< "$val";then
-                   echo "$val is number."
-                   serverStr+=" keepAliveTimeout=\\\"${val}\\\" "
+                   # 判断是否大于0
+                    if [ $val -gt 0 ]  
+                    then 
+                        serverStr+=" keepAliveTimeout=\\\"${val}\\\" "
+                    else    
+                        echo $arg'值小于0'
+                    fi  
                 else
                    echo $arg'值不合法'
                 fi
             ;;
-            # 响应的数据进行 GZIP 压缩
+            # 响应的数据进行是否 GZIP 压缩
             "TOMCAT_SERVER_COMPRESSION")
-                serverStr+=" compression=\\\"${val}\\\" "
+                # 值为 off/on/force 其他过滤
+                pass="F"
+                case $val in 
+                    "off")
+                        pass="T" 
+                    ;;
+                    "on")
+                        pass="T" 
+                    ;;
+                    "force")
+                        pass="T" 
+                    ;;
+                    *)
+                        pass="F" 
+                    ;;
+                esac    
+                if [ "$pass" = "T" ]
+                    then
+                    serverStr+=" compression=\\\"${val}\\\" "
+                else
+                    # 默认off
+                    serverStr+=" compression=\\\"off\\\" "
+                fi    
             ;;
             # 压缩类型
             "TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE")
+                # 压缩类型如何校验？
                 serverStr+=" compressableMimeType=\\\"${val}\\\" "
             ;;
     		*)
@@ -229,50 +337,59 @@ do
             "TOMCAT_CONTEXT_RESOURCE")
                 #  去空格
                 formatVal=`echo $val | sed s/[[:space:]]//g`
-                # 以英文分号";"分隔字符
-                formatVal=${formatVal//;/ }    #这里是将var中的,替换为空格
-                resourceStr=""
-                for element in $formatVal
-                do
-                    resourceStr+="<Resource type=\\\"javax.sql.DataSource\\\" "
-                    echo $element
-                    # 以竖线分隔每一个字符串
-                    OLD_IFS="$IFS"
-                    IFS="|"
-                    resourceArgs=($element)
-                    IFS="$OLD_IFS"
-                    for i in ${!resourceArgs[@]}
+                ### 校验数据源配置字符串 XXX|XXX|XXX|XXX|XXX;XXX|XXX|XXX|XXX|XXX;XXX|XXX|XXX|XXX|XXX ### 
+                # TODO 正则校验
+                filterVal = `echo "$val" | grep -E '(([^\;\|]*\|){4}([^\;\|]*){1})|((([^\;\|]*\|){4}([^\;\|]*\;){1})+(([^\;\|]*\|){4}([^\;\|]*){1})*)'`
+                if [ "$filterVal" == "" ]
+                then
+                    echo "TOMCAT_CONTEXT_RESOURCE参数不符合格式.."
+                else 
+                    # 以英文分号";"分隔字符
+                    formatVal=${formatVal//;/ }    #这里是将var中的;替换为空格
+                    
+                    resourceStr=""
+                    for element in $formatVal
                     do
-#                       echo ${resourceArgs[$i]}
-                        if [ "$i" == "0" ]
-                            then
-                                # jndi名称
-                                resourceStr+=" name=\\\"${resourceArgs[$i]}\\\" "
-                        elif [ "$i" == "1" ]
-                            then
-                                # 数据库用户名
-                                resourceStr+=" username=\\\"${resourceArgs[$i]}\\\" "
-                        elif [ "$i" == "2" ]
-                            then
-                                # 数据密码
-                                resourceStr+=" password=\\\"${resourceArgs[$i]}\\\" "
-                        elif [ "$i" == "3" ]
-                            then
-                                # jdbc驱动类名称
-                                resourceStr+=" driverClassName=\\\"${resourceArgs[$i]}\\\" "
-                        elif [ "$i" == "4" ]
-                            then
-                                # 数据库url
-                                resourceStr+=" url=\\\"${resourceArgs[$i]}\\\" "
-                        fi
+                        resourceStr+="<Resource type=\\\"javax.sql.DataSource\\\" auth=\\\"Container\\\" "
+                        echo $element
+                        # 以竖线分隔每一个字符串
+                        OLD_IFS="$IFS"
+                        IFS="|"
+                        resourceArgs=($element)
+                        IFS="$OLD_IFS"
+                        for i in ${!resourceArgs[@]}
+                        do
+    #                       echo ${resourceArgs[$i]}
+                            if [ "$i" == "0" ]
+                                then
+                                    # jndi名称
+                                    resourceStr+=" name=\\\"${resourceArgs[$i]}\\\" "
+                            elif [ "$i" == "1" ]
+                                then
+                                    # 数据库用户名
+                                    resourceStr+=" username=\\\"${resourceArgs[$i]}\\\" "
+                            elif [ "$i" == "2" ]
+                                then
+                                    # 数据密码
+                                    resourceStr+=" password=\\\"${resourceArgs[$i]}\\\" "
+                            elif [ "$i" == "3" ]
+                                then
+                                    # jdbc驱动类名称
+                                    resourceStr+=" driverClassName=\\\"${resourceArgs[$i]}\\\" "
+                            elif [ "$i" == "4" ]
+                                then
+                                    # 数据库url
+                                    resourceStr+=" url=\\\"${resourceArgs[$i]}\\\" "
+                            fi
+                        done
+
+                        resourceStr+=" />"
                     done
 
-                    resourceStr+=" />"
-                done
-
-                # 格式化带斜杠'/'的字符串
-                formatVal=`echo $resourceStr | sed -e 's/\//\\\\\//g'`
-                contextStr+=$formatVal" "
+                    # 格式化带斜杠'/'的字符串
+                    formatVal=`echo $resourceStr | sed -e 's/\//\\\\\//g'`
+                    contextStr+=$formatVal" "
+                fi    
             ;;
             *)
                  contextStr+=" "
@@ -306,21 +423,39 @@ do
         case $arg in 
             "TOMCAT_CATALINA_JVM_XMS")
                 if grep '^[[:digit:]]*$' <<< "$val";then  
-                    catalinaStr+=" -Xms${val}k "
+                    # 判断是否大于0
+                    if [ $val -gt 0 ]  
+                    then 
+                        catalinaStr+=" -Xms${val}k "
+                    else    
+                        echo $arg'值小于0'
+                    fi  
                 else  
                     echo $arg'值不合法'  
                 fi
             ;;
             "TOMCAT_CATALINA_JVM_XMX")
                 if grep '^[[:digit:]]*$' <<< "$val";then  
-                    catalinaStr+=" -Xmx${val}k "
+                    # 判断是否大于0
+                    if [ $val -gt 0 ]  
+                    then 
+                        catalinaStr+=" -Xmx${val}k "
+                    else    
+                        echo $arg'值小于0'
+                    fi  
                 else  
                    echo $arg'值不合法'  
                 fi 
             ;;
             "TOMCAT_CATALINA_JVM_XSS")
                 if grep '^[[:digit:]]*$' <<< "$val";then  
-                    catalinaStr+=" -Xss${val}k "
+                    # 判断是否大于0
+                    if [ $val -gt 0 ]  
+                    then 
+                        catalinaStr+=" -Xss${val}k "
+                    else    
+                        echo $arg'值小于0'
+                    fi  
                 else  
                     echo $arg'值不合法'  
                 fi 
