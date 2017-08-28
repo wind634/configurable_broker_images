@@ -339,7 +339,7 @@ do
                 formatVal=`echo $val | sed s/[[:space:]]//g`
                 ### 校验数据源配置字符串 XXX|XXX|XXX|XXX|XXX;XXX|XXX|XXX|XXX|XXX;XXX|XXX|XXX|XXX|XXX ### 
                 # 正则校验
-                filterVal=`echo "$val" | grep -E '(([^\;\|]*\|){4}([^\;\|]*[^\|\;]$){1})|((([^\;\|]*\|){4}([^\;\|]*\;){1})+(([^\;\|]*\|){4}([^\;\|]*[^\|\;]$){1}))' `
+                filterVal=`echo "$val" | grep -E '(([^\;\|]*\|){4}([^\;\|]*[^\|\;]$){1})|((([^\;\|]*\|){4}([^\;\|]*\;){1})+(([^\;\|]*\|){4}([^\;\|]*[^\|\;]$){1}))'`
                 if [ "$filterVal" == "" ]
                 then
                     echo "TOMCAT_CONTEXT_RESOURCE参数不符合格式.."
