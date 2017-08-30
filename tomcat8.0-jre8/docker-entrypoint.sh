@@ -303,7 +303,8 @@ do
             # 压缩类型
             "TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE")
                 # 压缩类型如何校验？
-                serverStr+=" compressableMimeType=\\\"${val}\\\" "
+                formatedVal=`echo $val | sed -e 's/\//\\\\\//g'`
+                serverStr+=" compressableMimeType=\\\"${formatedVal}\\\" "
             ;;
     		*)
     			serverStr+=" "
