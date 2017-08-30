@@ -1,4 +1,4 @@
-FROM tomcat:8.0-jre8
+FROM tomcat:8.0.46-jre8
 
 
 Add ./config/server.xml  /usr/local/tomcat/conf/server.xml
