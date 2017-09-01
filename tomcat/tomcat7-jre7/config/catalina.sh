@@ -68,7 +68,7 @@
 #                   command is executed. The default is "dt_socket".
 #
 #   JPDA_ADDRESS    (Optional) Java runtime options used when the "jpda start"
-#                   command is executed. The default is localhost:8000.
+#                   command is executed. The default is 8000.
 #
 #   JPDA_SUSPEND    (Optional) Java runtime options used when the "jpda start"
 #                   command is executed. Specifies whether JVM should suspend
@@ -158,20 +158,6 @@ if $cygwin; then
   [ -n "$CLASSPATH" ] && CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
-# Ensure that neither CATALINA_HOME nor CATALINA_BASE contains a colon
-# as this is used as the separator in the classpath and Java provides no
-# mechanism for escaping if the same character appears in the path.
-case $CATALINA_HOME in
-  *:*) echo "Using CATALINA_HOME:   $CATALINA_HOME";
-       echo "Unable to start as CATALINA_HOME contains a colon (:) character";
-       exit 1;
-esac
-case $CATALINA_BASE in
-  *:*) echo "Using CATALINA_BASE:   $CATALINA_BASE";
-       echo "Unable to start as CATALINA_BASE contains a colon (:) character";
-       exit 1;
-esac
-
 # For OS400
 if $os400; then
   # Set job priority to standard for interactive (interactive - 6) by using
@@ -246,10 +232,6 @@ if [ -z "$JSSE_OPTS" ] ; then
 fi
 JAVA_OPTS="$JAVA_OPTS $JSSE_OPTS"
 
-# Register custom URL handlers
-# Do this here so custom URL handles (specifically 'war:...') can be used in the security policy
-JAVA_OPTS="$JAVA_OPTS -Djava.protocol.handler.pkgs=org.apache.catalina.webresources"
-
 # Set juli LogManager config file if it is present and an override has not been issued
 if [ -z "$LOGGING_CONFIG" ]; then
   if [ -r "$CATALINA_BASE"/conf/logging.properties ]; then
@@ -303,7 +285,7 @@ if [ "$1" = "jpda" ] ; then
     JPDA_TRANSPORT="dt_socket"
   fi
   if [ -z "$JPDA_ADDRESS" ]; then
-    JPDA_ADDRESS="localhost:8000"
+    JPDA_ADDRESS="8000"
   fi
   if [ -z "$JPDA_SUSPEND" ]; then
     JPDA_SUSPEND="n"
