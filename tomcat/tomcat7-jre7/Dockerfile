@@ -1,6 +1,7 @@
 FROM tomcat:7.0.81-jre7
 
 
+RUN mv  /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT_BAK
 Add ./config/server.xml  /usr/local/tomcat/conf/server.xml
 Add ./config/context.xml  /usr/local/tomcat/conf/context.xml
 Add ./config/catalina.sh  /usr/local/tomcat/bin
