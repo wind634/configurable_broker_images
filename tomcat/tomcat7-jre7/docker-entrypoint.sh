@@ -298,9 +298,17 @@ do
             ;;
             # 压缩类型
             "TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE")
-                # 压缩类型如何校验？
-                formatedVal=`echo $val | sed -e 's/\//\\\\\//g'`
-                serverStr+=" compressableMimeType=\\\"${formatedVal}\\\" "
+                # 去空格的操作
+                formatVal=`echo $val | sed s/[[:space:]]//g`
+                # 压缩类型做一个基础的正则验证,
+                filterVal=`echo "$formatVal" | grep -E '((\s*([0-9a-zA-Z]+\/[0-9a-zA-Z]+){1})\s*$)|(\s*([0-9a-zA-Z]+\/[0-9a-zA-Z]+\s*\,\s*)+([0-9a-zA-Z]+\/[0-9a-zA-Z]+\s*$){1})' `
+                if [ "$filterVal" == "" ]
+                then
+                   echo "TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE参数不符合格式.."
+                else
+                   formatedVal=`echo $filterVal | sed -e 's/\//\\\\\//g'`
+                   serverStr+=" compressableMimeType=\\\"${formatedVal}\\\" "
+                fi
             ;;
     		*)
     			serverStr+=" "
@@ -336,7 +344,7 @@ do
                 formatVal=`echo $val | sed s/[[:space:]]//g`
                 ### 校验数据源配置字符串 XXX|XXX|XXX|XXX|XXX;XXX|XXX|XXX|XXX|XXX;XXX|XXX|XXX|XXX|XXX ### 
                 # 正则校验
-                filterVal=`echo "$val" | grep -E '(([^\;\|]*\|){4}([^\;\|]*[^\|\;]$){1})|((([^\;\|]*\|){4}([^\;\|]*\;){1})+(([^\;\|]*\|){4}([^\;\|]*[^\|\;]$){1}))' `
+                filterVal=`echo "$val" | grep -E '(([^\;\|]*\|){4}([^\;\|]*[^\|\;]$){1})|((([^\;\|]*\|){4}([^\;\|]*\;){1})+(([^\;\|]*\|){4}([^\;\|]*[^\|\;]$){1}))'`
                 if [ "$filterVal" == "" ]
                 then
                     echo "TOMCAT_CONTEXT_RESOURCE参数不符合格式.."
