@@ -305,7 +305,7 @@ do
                 if [ "$filterVal" == "" ]
                 then
                    echo "TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE参数不符合格式.."
-                else:
+                else
                    formatedVal=`echo $filterVal | sed -e 's/\//\\\\\//g'`
                    serverStr+=" compressableMimeType=\\\"${formatedVal}\\\" "
                 fi
