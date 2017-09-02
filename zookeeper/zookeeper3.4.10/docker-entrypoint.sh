@@ -14,7 +14,7 @@
 # ZOO_CONF_FILE_*  该类型配置会逐行写入zoo.cfg配置文件中
 # ZOO_JVM_CONF_FILE_*   该类型配置会逐行写入java.env配置文件中
 
-set -e
+#set -e
 
 # Allow the container to be started with `--user`
 if [ "$1" = 'zkServer.sh' -a "$(id -u)" = '0' ]; then
@@ -56,7 +56,7 @@ if [ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]; then
         arg=${zoo_env_array[$i]}
         var="$arg"
         val=${!var}
-        echo "获取环境变量${arg}的值..."${val}
+        echo "get env ${arg}'s value..."${val}
         if [ -n ${val} ];then
             case $arg in 
                 "ZOO_PORT")
@@ -125,7 +125,7 @@ if [ ! -f "$ZOO_CONF_DIR/java.env" ]; then
         arg=${zoo_jvm_env_array[$i]}
         var="$arg"
         val=${!var}
-        echo "获取环境变量${arg}的值..."${val}
+        echo "get env ${arg}'s value..."${val}
 
         if [ -n $val ];then
             case $arg in 
