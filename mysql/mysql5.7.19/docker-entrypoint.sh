@@ -105,7 +105,7 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" -a "$(id -u)" = '0' ]; then
         file_env 'MYSQL_CONNECT_TIMEOUT'
         if [ -n "$MYSQL_CONNECT_TIMEOUT" ];then
             if grep '^[[:digit:]]*$' <<< "$MYSQL_CONNECT_TIMEOUT";then
-                if [ $MYSQL_CONNECT_TIMEOUT -gt 0 ]; then
+                if [ $MYSQL_CONNECT_TIMEOUT -ge 0 ]; then
                     echo  "connect_timeout=$MYSQL_CONNECT_TIMEOUT" >> "$CONFIG"
                 fi
             else
