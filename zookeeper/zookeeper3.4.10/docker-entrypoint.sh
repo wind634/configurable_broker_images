@@ -235,8 +235,8 @@ if [ ! -f "$ZOO_CONF_DIR/java.env" ]; then
                         if grep '^[[:digit:]]*$' <<< "$val";then
                             # 正整数数值
                             if [ $val -gt 0 ]; then
-                                if [ $val -lt 262144 ]; then
-                                    echo "the jvm xms is too small, must higher than 256m, then rejected..."
+                                if [ $val -lt 65536 ]; then
+                                    echo "the jvm xms is too small, must higher than 64m, then rejected..."
                                 else
                                     java_flags+=" -Xms${val}k"
                                 fi
@@ -247,8 +247,8 @@ if [ ! -f "$ZOO_CONF_DIR/java.env" ]; then
                         if grep '^[[:digit:]]*$' <<< "$val";then
                             # 正整数数值
                             if [ $val -gt 0 ]; then
-                                if [ $val -lt 262144 ]; then
-                                    echo "the jvm xmx is too small, must higher than 256m, then rejected..."
+                                if [ $val -lt 65536 ]; then
+                                    echo "the jvm xmx is too small, must higher than 64m, then rejected..."
                                 else
                                     java_flags+=" -Xmx${val}k"
                                 fi
