@@ -87,8 +87,8 @@ if [ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]; then
           }
         }
 
-        data_dir_set="F"
-        data_log_dir_set="F"
+#        data_dir_set="F"
+#        data_log_dir_set="F"
         # 重定向到配置文件路径
         for ((i=0;i<${#zoo_conf_file_array[@]};i++))
         do
@@ -99,25 +99,25 @@ if [ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]; then
             checkedVal=`echo "$val" | grep -E '^(\s*#\s*(\S*\s*)*\s*)|(\s*\w+\s*=\s*\S+\s*)$' `
 
             if [ -n "$checkedVal" ]; then
-                if [[ "$val" == *"dataDir"* ]];then
-                    data_dir_set="T"
-                fi
-                if [[ "$val" == *"dataLogDir"* ]];then
-                    data_log_dir_set="T"
-                fi
+#                if [[ "$val" == *"dataDir"* ]];then
+#                    data_dir_set="T"
+#                fi
+#                if [[ "$val" == *"dataLogDir"* ]];then
+#                    data_log_dir_set="T"
+#                fi
 
                 echo "env_file_row ${arg}'s content..."${val}
                 echo "$val" >> "$CONFIG"
             fi
         done
 
-        # 默认配置处理（dataDir和dataLogDir必须要配置不然无法启动）
-        if [ "$data_dir_set" == "F" ];then
-            echo "dataDir=$ZOO_DATA_DIR" >> "$CONFIG"
-        fi
-        if [ "$data_log_dir_set" == "F" ];then
-            echo "dataLogDir=$ZOO_DATA_LOG_DIR" >> "$CONFIG"
-        fi
+#        # 默认配置处理（dataDir和dataLogDir必须要配置不然无法启动）
+#        if [ "$data_dir_set" == "F" ];then
+#            echo "dataDir=$ZOO_DATA_DIR" >> "$CONFIG"
+#        fi
+#        if [ "$data_log_dir_set" == "F" ];then
+#            echo "dataLogDir=$ZOO_DATA_LOG_DIR" >> "$CONFIG"
+#        fi
 
     else
         for ((i=0;i<${#zoo_env_array[@]};i++))
