@@ -111,8 +111,6 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" -a "$(id -u)" = '0' ]; then
               for((j=i+1; j<$len; j++)){
                  num1=${mysql_conf_file_array[i]:16}
                  num2=${mysql_conf_file_array[j]:16}
-                 echo "num1:"$num1
-                 echo "num2:"$num2
                 if [[ ${num1} -gt ${num2} ]]
                 then
                   temp=${mysql_conf_file_array[i]}
