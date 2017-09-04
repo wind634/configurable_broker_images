@@ -1,8 +1,9 @@
 # configurable_broker_images
 中间件可配置化镜像
     `VERSION 1.0.0`
+# 一.TOMCAT
 
-# server.xml 涉及的环境变量
+## 1.server.xml 涉及的环境变量
 
 | 环境变量名称        |   描述    |  类型  |  取值范围
 | --------   | -----   | :----: | :----: |
@@ -20,7 +21,7 @@
 * TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE 类型示例: `text/html,text/xml,text/javascript,text/css,text/plain,image/gif,image/jpg,image/png`
 * 时间相关单位统一为毫秒
 
-# context.xml 涉及的环境变量
+## 2.context.xml 涉及的环境变量
 
 | 环境变量名称        |   描述    |  类型  |  取值范围
 | --------   | -----   | :----: | :----: |
@@ -35,7 +36,7 @@
 * url, 数据库uri, 字符串类型
 
 
-# catalina.sh 涉及的环境变量
+## 3.catalina.sh 涉及的环境变量
 
 | 环境变量名称        |   描述    |  类型  |  取值范围
 | --------   | -----   | :----: | :----: |
@@ -43,3 +44,22 @@
 | TOMCAT_CATALINA_JVM_XMX        | 最大堆大小(kb)      |   数字类型    |   |
 | TOMCAT_CATALINA_JVM_XSS        | 每个线程的栈大小(kb)      |   数字类型    |   |
 * 单位统一为kb
+
+# 二.ZOOKEEPER
+
+## 1.zookeeper 配置
+| 环境变量名称        |   描述    |  类型  |  取值范围
+| --------   | :-----   | :----: | :----: |
+| ZOO_TICK_TIME        | server端通信心跳间隔时间, 以毫秒为单位      |   数字类型    |   |
+| ZOO_INIT_LIMIT        | 集群中的follower和leader初始连接时能容忍的最多心跳数（tickTime的数量）     |   数字类型    |   |
+| ZOO_SYNC_LIMIT        | 集群中的follower服务器与leader服务器之间请求和应答之间能容忍的最多心跳数   |   数字类型    |   |
+| ZOO_SERVERS        | 集群的server配置      |   字符串类型    |   |
+
+* ZOO_SERVERS配置示例: `server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888`
+
+## 2.zookeeper jvm配置
+| 环境变量名称        |   描述    |  类型  |  取值范围
+| --------   | -----   | :----: | :----: |
+| ZOO_JVM_XMS        | 初始堆大小(kb)      |   数字类型    |   |
+| ZOO_JVM_XMX        | 最大堆大小(kb)      |   数字类型    |   |
+| ZOO_JVM_XSS        | 每个线程的栈大小(kb)      |   数字类型    |   |
