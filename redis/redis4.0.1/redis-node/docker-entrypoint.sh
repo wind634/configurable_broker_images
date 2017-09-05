@@ -5,6 +5,10 @@
 # REDIS_APPEND_FSYNC    appendonlylog如何同步到磁盘  always/everysec/no
 # REDIS_MAXMEMORY   可使用的最大内存
 # REDIS_MAXMEMORY_POLICY    内存不足时,数据清除策略    volatile-lru / allkeys-lru / volatile-random / allkeys-random / volatile-ttl /  noeviction
+
+# REDIS_MIN_SLAVES_TO_WRITE
+# REDIS_MIN_SLAVES_MAX_LAG
+
 # 在/usr/local/etc/redis/redis.conf 文件中
 
 # REDIS_CONF_FILE_*
@@ -234,6 +238,31 @@ if [ "$1" = 'redis-server' -a "$(id -u)" = '0' ]; then
                     echo  "maxmemory-policy $REDIS_MAXMEMORY_POLICY" >> "$CONFIG"
                 fi
             fi
+
+            # ========= 比较特殊的两个配置 =============
+            file_env 'REDIS_MIN_SLAVES_TO_WRITE'
+            if [ -n "$REDIS_MIN_SLAVES_TO_WRITE" ];then
+                # 大于等于0的数字
+                if grep '^[[:digit:]]*$' <<< "$REDIS_MIN_SLAVES_TO_WRITE";then
+                    if [ $REDIS_MIN_SLAVES_TO_WRITE -gt 0 ]; then
+                        echo  "min-slaves-to-write $REDIS_MIN_SLAVES_TO_WRITE" >> "$CONFIG"
+                    fi
+                else
+                    echo "min-slaves-to-write value is not a number."
+                fi
+            fi
+            file_env 'REDIS_MIN_SLAVES_MAX_LAG'
+            if [ -n "$REDIS_MIN_SLAVES_MAX_LAG" ];then
+                # 大于等于0的数字
+                if grep '^[[:digit:]]*$' <<< "$REDIS_MIN_SLAVES_MAX_LAG";then
+                    if [ $REDIS_MIN_SLAVES_MAX_LAG -gt 0 ]; then
+                        echo  "min-slaves-max-lag $REDIS_MIN_SLAVES_MAX_LAG" >> "$CONFIG"
+                    fi
+                else
+                    echo "min-slaves-max-lag value is not a number."
+                fi
+            fi
+
         fi
     fi
 	# add redis config end
