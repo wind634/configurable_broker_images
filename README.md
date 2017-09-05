@@ -76,3 +76,28 @@
 | MYSQL_WAIT_TIMEOUT        | 服务器关闭非交互连接之前等待活动秒数      |   数字类型    |  正整数  | 28800|
 
 * 时间单位统一为秒，内存大小单位统一为kb
+
+# 四.REDIS
+
+## 1.主从节点配置
+| 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
+| --------   | :-----   | :----: | :----: |:----: |
+| REDIS_TIMEOUT       | 客户端请求超时时间    |   数字类型    |   大于等于0整数 | 0 |
+| REDIS_RDB_COMPRESSION        | 是否使用压缩     |   可选型    |  yes/no|  yes |
+| REDIS_APPEND_ONLY        | 是否开启appendonlylog   |   可选型    |  yes/no | no |
+| REDIS_APPEND_FSYNC        | appendonlylog如何同步到磁盘     |   可选型    |  always/everysec/no  | everysec |
+| REDIS_MAXMEMORY        | 可使用的最大内存,单位bytes     |   数字类型    |  正整数  | 0 |
+| REDIS_MAXMEMORY_POLICY        | 内存不足时,数据清除策略     |   可选型    |  volatile-lru/allkeys-lru/volatile-random/allkeys-random/volatile-ttl/noeviction| volatile-lru|
+
+
+## 2.哨兵节点配置
+| 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
+| --------   | :-----   | :----: | :----: |:----: |
+| REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS       |  连接失效时间,毫秒     |   数字类型    |   正整数 | 30000 |
+| REDIS_SENTINEL_FAILOVER_TIMEOUT        | failover超时时间     |   数字类型    |  正整数 | |
+| REDIS_SENTINEL_PARALLEL_SYNCS        | 进行同步的slave个数   |   数字类型    |  正整数 |  |
+| REDIS_SENTINEL_MIN_SLAVES_TO_WRITE        |    |   数字类型    |  正整数 |  |
+| REDIS_SENTINEL_MIN_SLAVES_MAX_LAG        |    |   数字类型    |  正整数 |  |
+
+
+
