@@ -14,11 +14,9 @@ if [ -n "$JVM_XSS" ]; then
     java_opts+="-Xmx"$JVM_XSS"k"
 fi
 
-echo java_opts
+echo #java_opts
 if [ -n "$java_opts" ]; then
-    echo "aaa"
-    echo "$1"
-    exec "$1"
+    exec "$1" $java_opts "$2"
 else
     exec "$@"
 fi
