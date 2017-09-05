@@ -162,7 +162,7 @@ if [ "$1" = 'redis-sentinel' -a "$(id -u)" = '0' ]; then
                 fi
                 master_quorum=${master_quorum:-'2'}
 
-                echo  "sentinel master $master_name $master_ip $master_port $master_quorum" >> "$CONFIG"
+               echo  "sentinel monitor $master_name $master_ip $master_port $master_quorum" >> "$CONFIG"
 
                 # 失效时间
                 key='REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_'${master_req}
