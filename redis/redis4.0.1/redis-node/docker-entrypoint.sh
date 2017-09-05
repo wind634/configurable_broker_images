@@ -1,7 +1,7 @@
 #!/bin/bash
 # REDIS_TIMEOUT 客户端请求超时时间
-# REDIS_RDB_COMPRESSION 是否使用压缩
-# REDIS_APPEND_ONLY     是否开启appendonlylog
+# REDIS_RDB_COMPRESSION 是否使用压缩  yes/no
+# REDIS_APPEND_ONLY     是否开启appendonlylog   yes/no
 # REDIS_APPEND_FSYNC    appendonlylog如何同步到磁盘  always/everysec/no
 # REDIS_MAXMEMORY   可使用的最大内存
 # REDIS_MAXMEMORY_POLICY    内存不足时,数据清除策略    volatile-lru / allkeys-lru / volatile-random / allkeys-random / volatile-ttl /  noeviction
@@ -9,8 +9,8 @@
 
 # REDIS_CONF_FILE_*
 
+# set -e
 
-set -e
 
 # config file path
 CONFIG_DIR="/usr/local/etc/redis"
@@ -69,8 +69,9 @@ if [ "$1" = 'redis-server' -a "$(id -u)" = '0' ]; then
 
          if [ ! -d "$CONFIG_DIR" ]; then
             mkdir $CONFIG_DIR
-            touch $CONFIG
+
          fi
+        echo "" >> "$CONFIG"
         if [ $USE_REDIS_CONF_FILE == "true" ];then
             # 以配置文件的方式写入
             # 读取每一行环境变量
