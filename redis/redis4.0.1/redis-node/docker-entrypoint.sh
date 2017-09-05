@@ -96,7 +96,7 @@ if [ "$1" = 'redis-server' -a "$(id -u)" = '0' ]; then
                 var="$arg"
                 val=${!var}
                 # 每一行进行正则过滤，不符合格式则不写入
-                checkedVal=`echo "$val" | grep -E '^(\s*#\s*(\S*\s*)*\s*)|(\s*\S+\s+\S+\s*)$' `
+                checkedVal=`echo "$val" | grep -E '^((\s*#\s*(\S*\s*)*\s*)|(\s*\S+\s+\S+\s*))$' `
 
                 if [ -n "$checkedVal" ]; then
                     echo "env_file_row ${arg}'s content..."${val}
