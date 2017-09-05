@@ -88,16 +88,20 @@
 | REDIS_APPEND_FSYNC        | appendonlylog如何同步到磁盘     |   可选型    |  always/everysec/no  | everysec |
 | REDIS_MAXMEMORY        | 可使用的最大内存,单位bytes     |   数字类型    |  正整数  | 0 |
 | REDIS_MAXMEMORY_POLICY        | 内存不足时,数据清除策略     |   可选型    |  volatile-lru/allkeys-lru/volatile-random/allkeys-random/volatile-ttl/noeviction| volatile-lru|
+| REDIS_MIN_SLAVES_TO_WRITE        |    |   数字类型    |  正整数 |  |
+| REDIS_MIN_SLAVES_MAX_LAG        |    |   数字类型    |  正整数 |  |
 
 
-## 2.哨兵节点配置
+## 2.哨兵节点配置（可配置多个master）
 | 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
 | --------   | :-----   | :----: | :----: |:----: |
-| REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS       |  连接失效时间,毫秒     |   数字类型    |   正整数 | 30000 |
-| REDIS_SENTINEL_FAILOVER_TIMEOUT        | failover超时时间     |   数字类型    |  正整数 | |
-| REDIS_SENTINEL_PARALLEL_SYNCS        | 进行同步的slave个数   |   数字类型    |  正整数 |  |
-| REDIS_SENTINEL_MIN_SLAVES_TO_WRITE        |    |   数字类型    |  正整数 |  |
-| REDIS_SENTINEL_MIN_SLAVES_MAX_LAG        |    |   数字类型    |  正整数 |  |
+| REDIS_SENTINEL_MASTER_NAME_*       |  master节点名称     |   字符串    |    |  |
+| REDIS_SENTINEL_MASTER_IP_*       |  master节点ip     |   字符串    |    |  |
+| REDIS_SENTINEL_MASTER_PORT_*       |  master节点port     |   字符串    |    |  |
+| REDIS_SENTINEL_MASTER_QUORUM_*       |  master节点quorum     |   字符串    |    |  |
+| REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_*       |  连接失效时间,毫秒     |   数字类型    |   正整数 | 30000 |
+| REDIS_SENTINEL_FAILOVER_TIMEOUT_*        | failover超时时间     |   数字类型    |  正整数 | |
+| REDIS_SENTINEL_PARALLEL_SYNCS_*        | 进行同步的slave个数   |   数字类型    |  正整数 |  |
 
 
 

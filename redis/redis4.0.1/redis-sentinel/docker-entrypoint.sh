@@ -2,7 +2,9 @@
 # sentinel节点的配置方式
 # sentinel节点可以配置多个master
 # REDIS_SENTINEL_MASTER_NAME_* 主机名称
-# REDIS_SENTINEL_MONITOR_*    告诉sentinel去监听地址为ip:port的一个master
+# REDIS_SENTINEL_MASTER_IP_*   ip
+# REDIS_SENTINEL_MASTER_PORT_*   port
+# REDIS_SENTINEL_MASTER_QUORUM_*   quorum
 # REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_*  失效时间, 单位是毫秒，默认为30秒
 # REDIS_SENTINEL_FAILOVER_TIMEOUT_*  failover超时时间
 # REDIS_SENTINEL_PARALLEL_SYNCS_* 主备切换时最多可以有多少个slave同时对新的master同步
@@ -126,6 +128,41 @@ if [ "$1" = 'redis-sentinel' -a "$(id -u)" = '0' ]; then
 
                 # 获取mastername对应下标的其他环境变量
                 master_req=${master_name_array[i]:27}
+
+                 # master ip
+                key='REDIS_SENTINEL_MASTER_IP_'${master_req}
+                file_env key
+                value=${!key}
+                if [ -n "$value" ];then
+                    if grep '^[[:digit:]]*$' <<< "$value";then
+                        master_ip=$value
+                    fi
+                fi
+                master_ip=${master_ip:-'127.0.0.1'}
+
+                # master port
+                key='REDIS_SENTINEL_MASTER_PORT_'${master_req}
+                file_env key
+                value=${!key}
+                if [ -n "$value" ];then
+                    if grep '^[[:digit:]]*$' <<< "$value";then
+                        master_port=$value
+                    fi
+                fi
+                master_port=${master_port:-'6379'}
+
+                # master quorum
+                key='REDIS_SENTINEL_MASTER_QUORUM_'${master_req}
+                file_env key
+                value=${!key}
+                if [ -n "$value" ];then
+                    if grep '^[[:digit:]]*$' <<< "$value";then
+                        master_quorum=$value
+                    fi
+                fi
+                master_quorum=${master_quorum:-'2'}
+
+                echo  "sentinel master $master_name $master_ip $master_port $master_quorum" >> "$CONFIG"
 
                 # 失效时间
                 key='REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_'${master_req}
