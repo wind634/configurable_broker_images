@@ -7,28 +7,29 @@
 # PASSWORD  通信密码
 # REDIS_MAXMEMORY   最大内存
 COMPOSE_PATH="./docker-compose.yml"
+TMP_COMPOSE_PATH="./temp_docker-compose.yml"
 
 appname="wind_test"
 PASSWORD="123456"
 # 100m
 REDIS_MAXMEMORY="102400"
 
-if [  -f "$COMPOSE_PATH" ]; then
-   rm "./docker-compose.yml"
+if [  -f "$TMP_COMPOSE_PATH" ]; then
+   rm "$TMP_COMPOSE_PATH"
 fi
 
-cp "./docker-compose_template.yml" "./docker-compose.yml"
+cp "$COMPOSE_PATH" "$TMP_COMPOSE_PATH"
 
 sedCmd="s/{{appname}}/${appname}/g"
-sed -i "$sedCmd" ./docker-compose.yml
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
 
 sedCmd="s/{{PASSWORD}}/${PASSWORD}/g"
-sed -i "$sedCmd" ./docker-compose.yml
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
 
 sedCmd="s/{{REDIS_MAXMEMORY}}/${REDIS_MAXMEMORY}/g"
-sed -i "$sedCmd" ./docker-compose.yml
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
 
-docker-compose up -d
+#docker-compose up -d
 # swarm模式
 #docker swarm init
 #docker stack deploy -c docker-compose.yml redis_ha_test

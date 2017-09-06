@@ -12,12 +12,12 @@ services:
     restart: unless-stopped
     cpu_quota: 50000
     environment:
-      - APPNAME=wind_test
-      - REDIS_AUTH_PASSWORD=123456
+      - APPNAME={{appname}}
+      - REDIS_AUTH_PASSWORD={{PASSWORD}}
       - STARTORDER=7
   master:
     image: daocloud.io/daocloud/redis:ha
-    command: --appendonly yes --masterauth 123456 --requirepass 123456
+    command: --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
     labels:
       - "io.daocloud.dce.service.role=master"
       - "io.daocloud.dce.compose.endpoint-spec.mode=dnsrr"
@@ -28,7 +28,7 @@ services:
     cpu_quota: 80000
     environment:
       - STARTORDER=0
-      - REDIS_MAXMEMORY=102400
+      - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
   slave:
     image: daocloud.io/daocloud/redis:ha
     labels:
@@ -37,12 +37,12 @@ services:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool2 == servicepool2", "node.labels.redis == redis"]
     volumes:
       - /data
-    command: redis-server --slaveof wind_test_master 6379 --appendonly yes --masterauth 123456 --requirepass 123456
+    command: redis-server --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
     restart: unless-stopped
     cpu_quota: 50000
     environment:
       - STARTORDER=1
-      - REDIS_MAXMEMORY=102400
+      - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
   slave1:
     image: daocloud.io/daocloud/redis:ha
     labels:
@@ -51,12 +51,12 @@ services:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool3 == servicepool3", "node.labels.redis == redis"]
     volumes:
       - /data
-    command: redis-server --slaveof wind_test_master 6379 --appendonly yes --masterauth 123456 --requirepass 123456
+    command: redis-server --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
     restart: unless-stopped
     cpu_quota: 50000
     environment:
       - STARTORDER=2
-      - REDIS_MAXMEMORY=102400
+      - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
   sentinel0:
     image: daocloud.io/daocloud/redis-sentinel:v2
     labels:
@@ -64,8 +64,8 @@ services:
     ports:
       - "26379"
     environment:
-      - APPNAME=wind_test
-      - REDIS_SENTINEL_PASSWORD_0=123456
+      - APPNAME={{appname}}
+      - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
       - STARTORDER=3
     restart: unless-stopped
     cpu_quota: 50000
@@ -76,8 +76,8 @@ services:
     ports:
       - "26379"
     environment:
-      - APPNAME=wind_test
-      - REDIS_SENTINEL_PASSWORD_0=123456
+      - APPNAME={{appname}}
+      - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
       - STARTORDER=4
     restart: unless-stopped
     cpu_quota: 50000
@@ -88,21 +88,21 @@ services:
     ports:
       - "26379"
     environment:
-      - APPNAME=wind_test
-      - REDIS_SENTINEL_PASSWORD_0=123456
+      - APPNAME={{appname}}
+      - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
       - STARTORDER=5
     restart: unless-stopped
     cpu_quota: 50000
-  exporter:
-    image: daocloud.io/daocloud/servicebroker-exporter
-    labels:
-      - "io.daocloud.dce.service.role=exporter"
-    environment:
-      - STARTORDER=6
-      - APPTYPE=redis-ha
-      - APPNAME=wind_test
-      - HOSTS=redis:master:master:6379,redis:slave:slave:6379,sentinel:sentinel:sentinel:26379,haproxy:haproxy:haproxy:6379 # host=type:role:host:port
-      - USERNAME=redis_has_no_user
-      - PASSWORD=123456
-    ports:
-      - '9120'
+#  exporter:
+#    image: daocloud.io/daocloud/servicebroker-exporter
+#    labels:
+#      - "io.daocloud.dce.service.role=exporter"
+#    environment:
+#      - STARTORDER=6
+#      - APPTYPE=redis-ha
+#      - APPNAME={{appname}}
+#      - HOSTS=redis:master:master:6379,redis:slave:slave:6379,sentinel:sentinel:sentinel:26379,haproxy:haproxy:haproxy:6379 # host=type:role:host:port
+#      - USERNAME=redis_has_no_user
+#      - PASSWORD={{PASSWORD}}
+#    ports:
+#      - '9120'
