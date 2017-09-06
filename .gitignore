@@ -3,3 +3,4 @@
 logs/
 env/
 *.zip
+temp_docker-compose.yml
