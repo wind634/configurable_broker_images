@@ -195,10 +195,10 @@ if [ "$1" = 'redis-server' -a "$(id -u)" = '0' ]; then
             #  可使用的最大内存
             file_env 'REDIS_MAXMEMORY'
             if [ -n "$REDIS_MAXMEMORY" ];then
-                # 大于等于0的数字 bytes 为单位
+                # 大于等于0的数字 kb 为单位
                 if grep '^[[:digit:]]*$' <<< "$REDIS_MAXMEMORY";then
                     if [ $REDIS_MAXMEMORY -ge 0 ]; then
-                        echo  "maxmemory $REDIS_MAXMEMORY" >> "$CONFIG"
+                        echo  "maxmemory ${REDIS_MAXMEMORY}k" >> "$CONFIG"
                     fi
                 else
                     echo "maxmemory value is not a number."
