@@ -3,7 +3,7 @@
 # ZOO_TICK_TIME   server端通信心跳间隔时间, 以毫秒为单位
 # ZOO_INIT_LIMIT  集群中的follower和leader初始连接时能容忍的最多心跳数（tickTime的数量）
 # ZOO_SYNC_LIMIT  集群中的follower服务器与leader服务器之间请求和应答之间能容忍的最多心跳数（tickTime的数量）
-# ZOO_SERVERS  集群的server配置 server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+# ZOO_SERVERS  集群的server配置 server.1=zoo1:2888:3888,server.2=zoo2:2888:3888,server.3=zoo3:2888:3888
 
 # === 还有一块是zookeeper的jvm的配置
 # ZOO_JVM_XMS  初始堆大小
@@ -105,8 +105,7 @@ if [ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]; then
                 if [ -n "$grep_servers_val" ]; then
                     # 如果是个服务器配置
                     filted_val=`echo $val | sed s/[[:space:]]//g`
-                    server_name=`echo $filted_val|cut -d ' ' -f 1 |cut -d = -f 2 |cut -d ':' -f 1`
-                    zooservers+="$server_name "
+                    zooservers+="${filted_val} "
                 fi
                 if [[ "$val" == *"clientPort"* ]];then
                     client_port_defined="T"
