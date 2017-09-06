@@ -29,3 +29,6 @@ sedCmd="s/{{REDIS_MAXMEMORY}}/${REDIS_MAXMEMORY}/g"
 sed -i "$sedCmd" ./docker-compose.yml
 
 docker-compose up -d
+# swarm模式
+#docker swarm init
+#docker stack deploy -c docker-compose.yml redis_ha_test
