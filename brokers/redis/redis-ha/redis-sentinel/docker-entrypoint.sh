@@ -1,6 +1,6 @@
 #!/bin/bash
 # sentinel节点的配置方式
-# sentinel节点可以配置多个master
+# sentinel节点可以配置多个master,目前只配置一个,*号统一取0
 # REDIS_SENTINEL_MASTER_NAME_* 主机名称
 # REDIS_SENTINEL_MASTER_IP_*   ip
 # REDIS_SENTINEL_MASTER_PORT_*   port
