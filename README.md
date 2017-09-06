@@ -102,6 +102,13 @@
 | REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_0       |  连接失效时间,毫秒     |   数字类型    |   正整数 | 30000 |
 | REDIS_SENTINEL_FAILOVER_TIMEOUT_0        | failover超时时间     |   数字类型    |  正整数 | |
 | REDIS_SENTINEL_PARALLEL_SYNCS_0        | 进行同步的slave个数   |   数字类型    |  正整数 |  |
+| REDIS_SENTINEL_PASSWORD_0        | redis认证密码   |   字符串类型    |   |  |
+
+## 3.haproxy配置
+
+| 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
+| --------   | :-----   | :----: | :----: |:----: |
+| HAPROXY_BALANCE       |  负载均衡算法   |   字符串    |  roundrobin/source  | roundrobin |
 
 
 # 五.JAVA
