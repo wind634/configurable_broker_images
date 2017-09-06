@@ -92,16 +92,16 @@
 | REDIS_MIN_SLAVES_MAX_LAG        |    |   数字类型    |  正整数 |  |
 
 
-## 2.哨兵节点配置（可配置多个master）
+## 2.哨兵节点配置（原每个哨兵可配置多个master, 基于目前1主2从3哨兵的方式，每个哨兵配置一个master）
 | 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
 | --------   | :-----   | :----: | :----: |:----: |
-| REDIS_SENTINEL_MASTER_NAME_*       |  master节点名称     |   字符串    |    |  |
-| REDIS_SENTINEL_MASTER_IP_*       |  master节点ip     |   字符串    |    |  |
-| REDIS_SENTINEL_MASTER_PORT_*       |  master节点port     |   字符串    |    |  |
-| REDIS_SENTINEL_MASTER_QUORUM_*       |  master节点quorum     |   字符串    |    |  |
-| REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_*       |  连接失效时间,毫秒     |   数字类型    |   正整数 | 30000 |
-| REDIS_SENTINEL_FAILOVER_TIMEOUT_*        | failover超时时间     |   数字类型    |  正整数 | |
-| REDIS_SENTINEL_PARALLEL_SYNCS_*        | 进行同步的slave个数   |   数字类型    |  正整数 |  |
+| REDIS_SENTINEL_MASTER_NAME_0       |  master节点名称     |   字符串    |    |  |
+| REDIS_SENTINEL_MASTER_IP_0       |  master节点ip     |   字符串    |    |  |
+| REDIS_SENTINEL_MASTER_PORT_0       |  master节点port     |   字符串    |    |  |
+| REDIS_SENTINEL_MASTER_QUORUM_0       |  master节点quorum     |   字符串    |    |  |
+| REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_0       |  连接失效时间,毫秒     |   数字类型    |   正整数 | 30000 |
+| REDIS_SENTINEL_FAILOVER_TIMEOUT_0        | failover超时时间     |   数字类型    |  正整数 | |
+| REDIS_SENTINEL_PARALLEL_SYNCS_0        | 进行同步的slave个数   |   数字类型    |  正整数 |  |
 
 
 # 五.JAVA
