@@ -1,7 +1,7 @@
 version: '2'
 services:
   haproxy:
-    image: daocloud.io/daocloud/haproxy-redis:v2
+    image: wind634/haproxy-redis
     labels:
       - "io.daocloud.dce.service.role=proxy"
       - "io.daocloud.dce.service.console=true"
@@ -16,7 +16,7 @@ services:
       - REDIS_AUTH_PASSWORD={{PASSWORD}}
       - STARTORDER=7
   master:
-    image: daocloud.io/daocloud/redis:ha
+    image: wind634/redis
     command: --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
     labels:
       - "io.daocloud.dce.service.role=master"
@@ -30,7 +30,7 @@ services:
       - STARTORDER=0
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
   slave:
-    image: daocloud.io/daocloud/redis:ha
+    image: wind634/redis
     labels:
       - "io.daocloud.dce.service.role=slave"
       - "io.daocloud.dce.compose.endpoint-spec.mode=dnsrr"
@@ -44,7 +44,7 @@ services:
       - STARTORDER=1
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
   slave1:
-    image: daocloud.io/daocloud/redis:ha
+    image: wind634/redis
     labels:
       - "io.daocloud.dce.service.role=slave"
       - "io.daocloud.dce.compose.endpoint-spec.mode=dnsrr"
@@ -58,7 +58,7 @@ services:
       - STARTORDER=2
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
   sentinel0:
-    image: daocloud.io/daocloud/redis-sentinel:v2
+    image: wind634/redis-sentinel
     labels:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool1 == servicepool1", "node.labels.redis == redis"]
     ports:
@@ -70,7 +70,7 @@ services:
     restart: unless-stopped
     cpu_quota: 50000
   sentinel1:
-    image: daocloud.io/daocloud/redis-sentinel:v2
+    image: wind634/redis-sentinel
     labels:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool2 == servicepool2", "node.labels.redis == redis"]
     ports:
@@ -82,7 +82,7 @@ services:
     restart: unless-stopped
     cpu_quota: 50000
   sentinel2:
-    image: daocloud.io/daocloud/redis-sentinel:v2
+    image: wind634/redis-sentinel
     labels:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool3 == servicepool3", "node.labels.redis == redis"]
     ports:
