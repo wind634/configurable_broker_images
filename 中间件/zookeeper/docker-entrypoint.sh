@@ -87,8 +87,10 @@ if [ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]; then
           }
         }
 
-#        data_dir_set="F"
-#        data_log_dir_set="F"
+        client_port_defined="F"
+        data_dir_defined="F"
+        data_log_dir_defined="F"
+        zooservers=""
         # 重定向到配置文件路径
         for ((i=0;i<${#zoo_conf_file_array[@]};i++))
         do
@@ -96,28 +98,41 @@ if [ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]; then
             var="$arg"
             val=${!var}
             # 每一行进行正则过滤，不符合格式则不写入
-            checkedVal=`echo "$val" | grep -E '^(\s*#\s*(\S*\s*)*\s*)|(\s*\w+\s*=\s*\S+\s*)$' `
+            checkedVal=`echo "$val" | grep -E '^(\s*#\s*(\S*\s*)*\s*)$|^(\s*\w+\s*=\s*\S+\s*)$|^(\s*(\w+.[1-9]+\s*\=\s*\w+\s*\:\s*[1-9]+\s*\:\s*[1-9]+\s*){1}\s*)$' `
 
             if [ -n "$checkedVal" ]; then
-#                if [[ "$val" == *"dataDir"* ]];then
-#                    data_dir_set="T"
-#                fi
-#                if [[ "$val" == *"dataLogDir"* ]];then
-#                    data_log_dir_set="T"
-#                fi
+                grep_servers_val=`echo "$val" | grep -E '^(\s*(\w+.[1-9]+\s*\=\s*\w+\s*\:\s*[1-9]+\s*\:\s*[1-9]+\s*){1}\s*)$'`
+                if [ -n "$grep_servers_val" ]; then
+                    # 如果是个服务器配置
+                    filted_val=`echo $val | sed s/[[:space:]]//g`
+                    server_name=`echo $filted_val|cut -d ' ' -f 1 |cut -d = -f 2 |cut -d ':' -f 1`
+                    zooservers+="$server_name "
+                fi
+                if [[ "$val" == *"clientPort"* ]];then
+                    client_port_defined="T"
+                fi
+                if [[ "$val" == *"dataDir"* ]];then
+                    data_dir_defined="T"
+                fi
+                if [[ "$val" == *"dataLogDir"* ]];then
+                    data_log_dir_defined="T"
+                fi
 
                 echo "env_file_row ${arg}'s content..."${val}
                 echo "$val" >> "$CONFIG"
             fi
         done
 
-#        # 默认配置处理（dataDir和dataLogDir必须要配置不然无法启动）
-#        if [ "$data_dir_set" == "F" ];then
-#            echo "dataDir=$ZOO_DATA_DIR" >> "$CONFIG"
-#        fi
-#        if [ "$data_log_dir_set" == "F" ];then
-#            echo "dataLogDir=$ZOO_DATA_LOG_DIR" >> "$CONFIG"
-#        fi
+        # 默认配置处理（clientPort,dataDir和dataLogDir必须要配置不然无法启动）
+        if [ "$client_port_defined" == "F" ];then
+            echo "clientPort=$ZOO_PORT" >> "$CONFIG"
+        fi
+        if [ "$data_dir_defined" == "F" ];then
+            echo "dataDir=$ZOO_DATA_DIR" >> "$CONFIG"
+        fi
+        if [ "$data_log_dir_defined" == "F" ];then
+            echo "dataLogDir=$ZOO_DATA_LOG_DIR" >> "$CONFIG"
+        fi
 
     else
         for ((i=0;i<${#zoo_env_array[@]};i++))
@@ -167,11 +182,18 @@ if [ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]; then
                         fi
                     ;;
                     "ZOO_SERVERS")
-                        checkedVal=`echo "$val" | grep -E '^\s*(\w+.[1-9]+\=\w+\:[1-9]+\:[1-9]+\s+)*\s*$' `
+                        # servers config
+                        # 去空格
+                        val=`echo $val | sed s/[[:space:]]//g`
+                        checkedVal=`echo "$val" | grep -E '^(\w+.[1-9]+\=\w+\:[1-9]+\:[1-9]+)+$|^(\w+.[1-9]+\=\w+\:[1-9]+\:[1-9]+\,)+(\w+.[1-9]+\=\w+\:[1-9]+\:[1-9]+){1}$' `
                         if [ -n "$checkedVal" ];then
-                            for server in $val; do
-                                echo "$server" >> "$CONFIG"
-                            done
+                            # ,号替换成空格
+                            zooservers=`echo ${val//,/ }`
+                            if [[ $? -eq 0 ]]; then
+                                for server in $zooservers; do
+                                    echo "$server" >> "$CONFIG"
+                                done
+                            fi
                         else
                           echo "the ZOO_SERVERS args format wrong..."
                         fi
@@ -182,6 +204,7 @@ if [ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]; then
                 esac
             fi
         done
+
     fi
 fi
 
@@ -281,6 +304,19 @@ if [ ! -f "$ZOO_CONF_DIR/java.env" ]; then
             echo "export JVMFLAGS=\"$java_flags\"" >> "$JAVA_ENV"
         fi
     fi
+fi
+
+# 配置文件结束后进行网络通信检查
+if [ -n "$zooservers" ];then
+    for zk_service in `echo $zooservers`
+    do
+        zk_host_name=`echo $zk_service|cut -d ' ' -f 1 |cut -d = -f 2 |cut -d ':' -f 1`
+        echo "wait $zk_host_name network is ok"
+        while true
+        do
+            ping -c 1 $zk_host_name >/dev/null 2>&1 &&  break  || ( echo -e "."; sleep 1s )
+        done
+    done
 fi
 
 

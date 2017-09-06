@@ -1,0 +1,1 @@
+zookeeper作为分布式协调服务，不采用compose方式来创建.

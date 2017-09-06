@@ -11,6 +11,7 @@ ENV ZOO_USER=zookeeper \
 
 COPY ./docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["zkServer.sh", "start-foreground"]
