@@ -135,9 +135,7 @@ if [ "$1" = 'redis-sentinel' -a "$(id -u)" = '0' ]; then
                 file_env key
                 value=${!key}
                 if [ -n "$value" ];then
-                    if grep '^[[:digit:]]*$' <<< "$value";then
-                        master_host=$value
-                    fi
+                    master_host=$value
                 fi
                 master_host=${master_host:-'127.0.0.1'}
 
