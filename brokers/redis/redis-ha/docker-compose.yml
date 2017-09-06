@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   haproxy:
     image: wind634/haproxy-redis
@@ -10,7 +10,7 @@ services:
       - "6379"
     command: haproxy -f /usr/local/etc/haproxy/haproxy.cfg
     restart: unless-stopped
-    cpu_quota: 50000
+#    cpu_quota: 50000
     environment:
       - APPNAME={{appname}}
       - REDIS_AUTH_PASSWORD={{PASSWORD}}
@@ -25,7 +25,7 @@ services:
     volumes:
       - /data
     restart: unless-stopped
-    cpu_quota: 80000
+#    cpu_quota: 80000
     environment:
       - STARTORDER=0
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
@@ -39,7 +39,7 @@ services:
       - /data
     command: redis-server --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
     restart: unless-stopped
-    cpu_quota: 50000
+#    cpu_quota: 50000
     environment:
       - STARTORDER=1
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
@@ -53,7 +53,7 @@ services:
       - /data
     command: redis-server --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
     restart: unless-stopped
-    cpu_quota: 50000
+#    cpu_quota: 50000
     environment:
       - STARTORDER=2
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
@@ -69,7 +69,7 @@ services:
       - REDIS_SENTINEL_MASTER_HOST_0={{appname}}_master
       - STARTORDER=3
     restart: unless-stopped
-    cpu_quota: 50000
+#    cpu_quota: 50000
   sentinel1:
     image: wind634/redis-sentinel
     labels:
@@ -82,7 +82,7 @@ services:
       - REDIS_SENTINEL_MASTER_HOST_0={{appname}}_master
       - STARTORDER=4
     restart: unless-stopped
-    cpu_quota: 50000
+#    cpu_quota: 50000
   sentinel2:
     image: wind634/redis-sentinel
     labels:
@@ -95,7 +95,7 @@ services:
       - REDIS_SENTINEL_MASTER_HOST_0={{appname}}_master
       - STARTORDER=5
     restart: unless-stopped
-    cpu_quota: 50000
+#    cpu_quota: 50000
 #  exporter:
 #    image: daocloud.io/daocloud/servicebroker-exporter
 #    labels:
