@@ -1,4 +1,4 @@
-FROM redis:4.0.1
+FROM daocloud.io/daocloud/redis:ha
 
 COPY ./docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
