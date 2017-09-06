@@ -1,4 +1,4 @@
-FROM haproxy:1.7
+FROM daocloud.io/daocloud/haproxy-redis:v2
 
 COPY ./docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
