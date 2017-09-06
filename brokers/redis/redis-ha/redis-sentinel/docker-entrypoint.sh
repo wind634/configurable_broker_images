@@ -8,6 +8,7 @@
 # REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_*  失效时间, 单位是毫秒，默认为30秒
 # REDIS_SENTINEL_FAILOVER_TIMEOUT_*  failover超时时间
 # REDIS_SENTINEL_PARALLEL_SYNCS_* 主备切换时最多可以有多少个slave同时对新的master同步
+# REDIS_SENTINEL_PASSWORD_* 主备切换时最多可以有多少个slave同时对新的master同步
 
 # 配置文件在/usr/local/etc/redis/sentinel.conf 路径下
 
@@ -135,10 +136,10 @@ if [ "$1" = 'redis-sentinel' -a "$(id -u)" = '0' ]; then
                 value=${!key}
                 if [ -n "$value" ];then
                     if grep '^[[:digit:]]*$' <<< "$value";then
-                        master_ip=$value
+                        master_host=$value
                     fi
                 fi
-                master_ip=${master_ip:-'127.0.0.1'}
+                master_host=${master_host:-'127.0.0.1'}
 
                 # master port
                 key='REDIS_SENTINEL_MASTER_PORT_'${master_req}
@@ -162,7 +163,7 @@ if [ "$1" = 'redis-sentinel' -a "$(id -u)" = '0' ]; then
                 fi
                 master_quorum=${master_quorum:-'2'}
 
-               echo  "sentinel monitor $master_name $master_ip $master_port $master_quorum" >> "$CONFIG"
+               echo  "sentinel monitor $master_name $master_host $master_port $master_quorum" >> "$CONFIG"
 
                 # 失效时间
                 key='REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_'${master_req}
@@ -209,7 +210,17 @@ if [ "$1" = 'redis-sentinel' -a "$(id -u)" = '0' ]; then
                     fi
                 fi
 
-                echo  "" >> "$CONFIG"
+                # 认证密码
+                key='REDIS_SENTINEL_PASSWORD_'${master_req}
+                file_env key
+                value=${!key}
+                if [ -n "$value" ];then
+                    echo  "sentinel auth-pass $master_name $value" >> "$CONFIG"
+                fi
+
+                echo "sentinel config-epoch $master_name  0" >> "$CONFIG"
+                echo "sentinel leader-epoch $master_name  1" >> "$CONFIG"
+
             done
 
         fi
