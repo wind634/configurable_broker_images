@@ -1,3 +1,4 @@
+#!/bin/bash
 cd .
 cd ./redis-node/
 docker build -t wind634/redis .
