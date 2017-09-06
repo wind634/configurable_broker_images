@@ -96,7 +96,7 @@
 | 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
 | --------   | :-----   | :----: | :----: |:----: |
 | REDIS_SENTINEL_MASTER_NAME_0       |  master节点名称     |   字符串    |    |  |
-| REDIS_SENTINEL_MASTER_IP_0       |  master节点ip     |   字符串    |    |  |
+| REDIS_SENTINEL_MASTER_HOST_0       |  master节点host/ip     |   字符串    |    |  |
 | REDIS_SENTINEL_MASTER_PORT_0       |  master节点port     |   字符串    |    |  |
 | REDIS_SENTINEL_MASTER_QUORUM_0       |  master节点quorum     |   字符串    |    |  |
 | REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_0       |  连接失效时间,毫秒     |   数字类型    |   正整数 | 30000 |

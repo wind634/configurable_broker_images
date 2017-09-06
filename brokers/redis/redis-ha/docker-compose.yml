@@ -66,6 +66,7 @@ services:
     environment:
       - APPNAME={{appname}}
       - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
+      - REDIS_SENTINEL_MASTER_PORT_0={{PASSWORD}}
       - STARTORDER=3
     restart: unless-stopped
     cpu_quota: 50000
@@ -78,6 +79,7 @@ services:
     environment:
       - APPNAME={{appname}}
       - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
+      - REDIS_SENTINEL_MASTER_HOST_0={{appname}}
       - STARTORDER=4
     restart: unless-stopped
     cpu_quota: 50000
@@ -90,6 +92,7 @@ services:
     environment:
       - APPNAME={{appname}}
       - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
+      - REDIS_SENTINEL_MASTER_PORT_0={{appname}}
       - STARTORDER=5
     restart: unless-stopped
     cpu_quota: 50000

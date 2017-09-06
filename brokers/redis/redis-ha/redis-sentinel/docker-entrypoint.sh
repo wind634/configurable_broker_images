@@ -2,7 +2,7 @@
 # sentinel节点的配置方式
 # sentinel节点可以配置多个master,目前只配置一个,*号统一取0
 # REDIS_SENTINEL_MASTER_NAME_* 主机名称
-# REDIS_SENTINEL_MASTER_IP_*   ip
+# REDIS_SENTINEL_MASTER_HOST_*   ip
 # REDIS_SENTINEL_MASTER_PORT_*   port
 # REDIS_SENTINEL_MASTER_QUORUM_*   quorum
 # REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_*  失效时间, 单位是毫秒，默认为30秒
@@ -131,7 +131,7 @@ if [ "$1" = 'redis-sentinel' -a "$(id -u)" = '0' ]; then
                 master_req=${master_name_array[i]:27}
 
                  # master ip
-                key='REDIS_SENTINEL_MASTER_IP_'${master_req}
+                key='REDIS_SENTINEL_MASTER_HOST_'${master_req}
                 file_env key
                 value=${!key}
                 if [ -n "$value" ];then
