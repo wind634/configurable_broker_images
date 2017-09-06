@@ -42,6 +42,7 @@ file_env() {
 # first arg is `-f` or `--some-option`
 # or first arg is `something.conf`
 if [ "${1#-}" != "$1" ] || [ "${1%.conf}" != "$1" ]; then
+    set -- $CONFIG "$@"
 	set -- redis-server "$@"
 fi
 
@@ -268,7 +269,6 @@ if [ "$1" = 'redis-server' -a "$(id -u)" = '0' ]; then
 	# add redis config end
 
 	exec gosu redis "$0" "$@"
+
 fi
-
-
-exec "$@" "$CONFIG"
+exec "$@"
