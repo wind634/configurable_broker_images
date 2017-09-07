@@ -7,13 +7,14 @@ services:
       - "io.daocloud.dce.service.console=true"
       - io.daocloud.dce.compose.placement.constraints=["node.labels.redis == redis"]
     ports:
-      - "6379"
+      - "6379:6379"
     command: haproxy -f /usr/local/etc/haproxy/haproxy.cfg
-    restart: unless-stopped
+#    restart: unless-stopped
 #    cpu_quota: 50000
     environment:
       - APPNAME={{appname}}
       - REDIS_AUTH_PASSWORD={{PASSWORD}}
+      - HAPROXY_BALANCE=source
       - STARTORDER=7
   master:
     image: wind634/redis
@@ -24,11 +25,12 @@ services:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool1 == servicepool1", "node.labels.redis == redis"]
     volumes:
       - /data
-    restart: unless-stopped
+#    restart: unless-stopped
 #    cpu_quota: 80000
     environment:
       - STARTORDER=0
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
+      - REDIS_TIMEOUT=200
   slave:
     image: wind634/redis
     labels:
@@ -37,8 +39,8 @@ services:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool2 == servicepool2", "node.labels.redis == redis"]
     volumes:
       - /data
-    command: redis-server --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
-    restart: unless-stopped
+    command:  --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
+#    restart: unless-stopped
 #    cpu_quota: 50000
     environment:
       - STARTORDER=1
@@ -51,12 +53,13 @@ services:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool3 == servicepool3", "node.labels.redis == redis"]
     volumes:
       - /data
-    command: redis-server --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
-    restart: unless-stopped
+    command: --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
+#    restart: unless-stopped
 #    cpu_quota: 50000
     environment:
       - STARTORDER=2
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
+      - REDIS_TIMEOUT=8000
   sentinel0:
     image: wind634/redis-sentinel
     labels:
@@ -67,8 +70,9 @@ services:
       - APPNAME={{appname}}
       - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
       - REDIS_SENTINEL_MASTER_HOST_0={{appname}}_master
+      - REDIS_SENTINEL_MASTER_QUORUM_0=2
       - STARTORDER=3
-    restart: unless-stopped
+#    restart: unless-stopped
 #    cpu_quota: 50000
   sentinel1:
     image: wind634/redis-sentinel
@@ -80,8 +84,9 @@ services:
       - APPNAME={{appname}}
       - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
       - REDIS_SENTINEL_MASTER_HOST_0={{appname}}_master
+      - REDIS_SENTINEL_MASTER_QUORUM_0=2
       - STARTORDER=4
-    restart: unless-stopped
+#    restart: unless-stopped
 #    cpu_quota: 50000
   sentinel2:
     image: wind634/redis-sentinel
@@ -93,8 +98,9 @@ services:
       - APPNAME={{appname}}
       - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
       - REDIS_SENTINEL_MASTER_HOST_0={{appname}}_master
+      - REDIS_SENTINEL_MASTER_QUORUM_0=2
       - STARTORDER=5
-    restart: unless-stopped
+#    restart: unless-stopped
 #    cpu_quota: 50000
 #  exporter:
 #    image: daocloud.io/daocloud/servicebroker-exporter
