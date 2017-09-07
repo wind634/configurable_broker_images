@@ -29,7 +29,7 @@ sed -i "$sedCmd" $TMP_COMPOSE_PATH
 sedCmd="s/{{REDIS_MAXMEMORY}}/${REDIS_MAXMEMORY}/g"
 sed -i "$sedCmd" $TMP_COMPOSE_PATH
 
-docker-compose  -f "${TMP_COMPOSE_PATH}" up -d
+#docker-compose  -f "${TMP_COMPOSE_PATH}" up -d
 # swarm模式
 #docker swarm init
-#docker stack deploy -c docker-compose.yml redis_ha_test
+docker stack deploy -c "$TMP_COMPOSE_PATH" "$appname"
