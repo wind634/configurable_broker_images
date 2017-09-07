@@ -229,4 +229,4 @@ if [ "$1" = 'redis-sentinel' -a "$(id -u)" = '0' ]; then
 fi
 
 
-exec "$@" "$CONFIG"
+exec "$@"
