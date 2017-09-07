@@ -111,14 +111,6 @@ if [ "$1" = 'redis-sentinel' -a "$(id -u)" = '0' ]; then
                 fi
             done
         else
-            # 以环境变量方式写入
-            len=${#master_name_array[@]}
-            # master name 必须，否则报错exit
-            if [ $len == 0 ];then
-                echo >&2 'error: REDIS_SENTINEL_MASTER_NAME env variable is must required.'
-                exit 1
-            fi
-
              # master name
             key='REDIS_SENTINEL_MASTER_NAME'
             file_env key
