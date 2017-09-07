@@ -9,28 +9,36 @@ services:
     ports:
       - "6379:6379"
     command: haproxy -f /usr/local/etc/haproxy/haproxy.cfg
-#    restart: unless-stopped
 #    cpu_quota: 50000
     environment:
       - APPNAME={{appname}}
       - REDIS_AUTH_PASSWORD={{PASSWORD}}
-      - HAPROXY_BALANCE=source
       - STARTORDER=7
+      - HAPROXY_BALANCE=source
+      - HAPROXY_MAXCONN=4096
+      - HAPROXY_CONNECT_TIMEOUT=5000
+      - HAPROXY_SERVER_TIMEOUT=50000
+      - HAPROXY_CLIENT_TIMEOUT=50000
+      - HAPROXY_BALANCE=roundrobin
   master:
     image: wind634/redis
-    command: --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
+    command: --appendonly yes --masterauth {{PASSWORD}}
     labels:
       - "io.daocloud.dce.service.role=master"
       - "io.daocloud.dce.compose.endpoint-spec.mode=dnsrr"
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool1 == servicepool1", "node.labels.redis == redis"]
     volumes:
       - /data
-#    restart: unless-stopped
 #    cpu_quota: 80000
     environment:
       - STARTORDER=0
+      - REDIS_TIMEOUT=0
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
-      - REDIS_TIMEOUT=200
+      - REDIS_RDB_COMPRESSION=no
+      - REDIS_APPEND_ONLY=no
+      - REDIS_APPEND_FSYNC=everysec
+      - REDIS_MAXMEMORY_POLICY=volatile-lru
+      - REDIS_PASSWORD={{PASSWORD}}
   slave:
     image: wind634/redis
     labels:
@@ -39,12 +47,20 @@ services:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool2 == servicepool2", "node.labels.redis == redis"]
     volumes:
       - /data
-    command:  --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
+    command:  --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}}
 #    restart: unless-stopped
 #    cpu_quota: 50000
     environment:
       - STARTORDER=1
+      - REDIS_TIMEOUT=0
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
+      - REDIS_RDB_COMPRESSION=no
+      - REDIS_APPEND_ONLY=no
+      - REDIS_APPEND_FSYNC=everysec
+      - REDIS_MAXMEMORY_POLICY=volatile-lru
+      - REDIS_PASSWORD={{PASSWORD}}
+    depends_on:
+      - master
   slave1:
     image: wind634/redis
     labels:
@@ -53,13 +69,20 @@ services:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool3 == servicepool3", "node.labels.redis == redis"]
     volumes:
       - /data
-    command: --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}} --requirepass {{PASSWORD}}
+    command: --slaveof {{appname}}_master 6379 --appendonly yes --masterauth {{PASSWORD}}
 #    restart: unless-stopped
 #    cpu_quota: 50000
     environment:
       - STARTORDER=2
+      - REDIS_TIMEOUT=0
       - REDIS_MAXMEMORY={{REDIS_MAXMEMORY}}
-      - REDIS_TIMEOUT=8000
+      - REDIS_RDB_COMPRESSION=no
+      - REDIS_APPEND_ONLY=no
+      - REDIS_APPEND_FSYNC=everysec
+      - REDIS_MAXMEMORY_POLICY=volatile-lru
+      - REDIS_PASSWORD={{PASSWORD}}
+    depends_on:
+      - master
   sentinel0:
     image: wind634/redis-sentinel
     labels:
@@ -68,11 +91,16 @@ services:
       - "26379"
     environment:
       - APPNAME={{appname}}
-      - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
-      - REDIS_SENTINEL_MASTER_HOST_0={{appname}}_master
-      - REDIS_SENTINEL_MASTER_QUORUM_0=2
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=30000
+      - REDIS_SENTINEL_PASSWORD={{PASSWORD}}
+      - REDIS_SENTINEL_MASTER_HOST={{appname}}_master
+      - REDIS_SENTINEL_PARALLEL_SYNCS=1
+      - REDIS_SENTINEL_FAILOVER_TIMEOUT=180000
       - STARTORDER=3
-#    restart: unless-stopped
+    depends_on:
+      - master
+      - slave
+      - slave1
 #    cpu_quota: 50000
   sentinel1:
     image: wind634/redis-sentinel
@@ -82,11 +110,16 @@ services:
       - "26379"
     environment:
       - APPNAME={{appname}}
-      - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
-      - REDIS_SENTINEL_MASTER_HOST_0={{appname}}_master
-      - REDIS_SENTINEL_MASTER_QUORUM_0=2
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=30000
+      - REDIS_SENTINEL_PASSWORD={{PASSWORD}}
+      - REDIS_SENTINEL_MASTER_HOST={{appname}}_master
+      - REDIS_SENTINEL_PARALLEL_SYNCS=1
+      - REDIS_SENTINEL_FAILOVER_TIMEOUT=180000
       - STARTORDER=4
-#    restart: unless-stopped
+    depends_on:
+      - master
+      - slave
+      - slave1
 #    cpu_quota: 50000
   sentinel2:
     image: wind634/redis-sentinel
@@ -96,10 +129,16 @@ services:
       - "26379"
     environment:
       - APPNAME={{appname}}
-      - REDIS_SENTINEL_PASSWORD_0={{PASSWORD}}
-      - REDIS_SENTINEL_MASTER_HOST_0={{appname}}_master
-      - REDIS_SENTINEL_MASTER_QUORUM_0=2
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=30000
+      - REDIS_SENTINEL_PASSWORD={{PASSWORD}}
+      - REDIS_SENTINEL_MASTER_HOST={{appname}}_master
+      - REDIS_SENTINEL_PARALLEL_SYNCS=1
+      - REDIS_SENTINEL_FAILOVER_TIMEOUT=180000
       - STARTORDER=5
+    depends_on:
+      - master
+      - slave
+      - slave1
 #    restart: unless-stopped
 #    cpu_quota: 50000
 #  exporter:
