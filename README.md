@@ -102,6 +102,19 @@
 
 * 时间单位为毫秒
 
+## 3.haproxy配置
+
+| 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
+| --------   | :-----   | :----: | :----: |:----: |
+| HAPROXY_MAXCONN       |  最大连接数   |   数字类型   |  正整数  | 4096 |
+| HAPROXY_CONNECT_TIMEOUT       |  连接超时   |   数字类型   | 正整数   | 5000 |
+| HAPROXY_CLIENT_TIMEOUT       |  客户端超时   |  数字类型    |  正整数  | 50000 |
+| HAPROXY_SERVER_TIMEOUT       |  服务器超时   |   数字类型   |  正整数  | 50000 |
+| HAPROXY_BALANCE    |  负载均衡算法   |   字符串    |  roundrobin / static-rr / leastconn / source / uri / url_param / hdr / rdp-cookie  | roundrobin |
+
+* 时间单位为毫秒
+
+
 # 五.JAVA
 
 ## jvm配置
