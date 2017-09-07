@@ -40,7 +40,7 @@ do
     env_key=`echo $LINE | cut -d = -f 1`
     case $env_key in
         "ZOO_CONF_FILE_"*)
-            # 只要该环节变量存在,说明是使用配置文件的形式
+            # 只要该环境变量存在,说明是使用配置文件的形式
             USE_ZOO_CONF_FILE="true"
             zoo_conf_file_array+=($env_key)
         ;;
