@@ -1,0 +1,65 @@
+version: '2'
+services:
+  mysql:
+    image: wind634/mysql
+    user: root
+    labels:
+      - "io.daocloud.dce.service.role=master"
+      - "io.daocloud.dce.service.console=true"
+      - io.daocloud.dce.compose.placement.constraints=["node.labels.{{ MACHINE1_LABLE }}"]
+    environment:
+      - STARTORDER=0
+      - REPLICATION_MASTER='true'
+      # Default User is 'admin'
+      - MYSQL_USER={{ mysql_root_user }}
+      # Specify 'admin' Password Below
+      - MYSQL_PASS={{ mysql_user_pass }}
+      - ON_CREATE_DB={{ default_db }}
+    ports:
+      - '3306'
+    volumes:
+      - ve:/etc/mysql
+      - vd:/var/lib/mysql
+    cpu_quota: 50000
+  mysql-slave:
+    image: wind634/mysql
+    user: root
+    labels:
+      - "io.daocloud.dce.service.role=slave"
+      - io.daocloud.dce.compose.placement.constraints=["node.labels.{{ MACHINE2_LABLE }}"]
+    environment:
+      - ADDRESS=mysql:3306
+      - STARTORDER=1
+      - REPLICATION_SLAVE='true'
+      # Default User is 'admin'
+      - MYSQL_USER={{ mysql_root_user }}
+      # Specify 'admin'  Password Below
+      - MYSQL_PASS={{ mysql_user_pass }}
+      - MYSQL_PORT_3306_TCP_ADDR=mysql
+      - MYSQL_PORT_3306_TCP_PORT=3306
+      - MYSQL_ENV_REPLICATION_USER={{ mysql_root_user }}
+      - MYSQL_ENV_REPLICATION_PASS={{ mysql_user_pass }}
+      - ON_CREATE_DB={{ default_db }}
+    ports:
+      - '3306'
+    volumes:
+      - se:/etc/mysql
+      - sd:/var/lib/mysql
+    cpu_quota: 50000
+volumes:
+  ve:
+      driver: rexray
+      driver_opts:
+        size: {{ VOLUMESIZE }}
+  vd:
+      driver: rexray
+      driver_opts:
+        size: {{ VOLUMESIZE }}
+  se:
+      driver: rexray
+      driver_opts:
+        size: {{ VOLUMESIZE }}
+  sd:
+      driver: rexray
+      driver_opts:
+        size: {{ VOLUMESIZE }}

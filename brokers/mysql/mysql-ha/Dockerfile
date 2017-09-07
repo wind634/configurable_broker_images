@@ -1,4 +1,4 @@
-FROM mysql:5.7.19
+FROM daocloud.io/daocloud/mysql-ha:stable
 
 COPY ./docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
