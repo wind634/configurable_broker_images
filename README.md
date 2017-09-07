@@ -42,7 +42,7 @@
 | --------   | -----   | :----: | :----: | :----: |
 | TOMCAT_CATALINA_JVM_XMS        | 初始堆大小(kb)      |   数字类型    |  512*1024kb~内存上限  |  内存上限3/4   |
 | TOMCAT_CATALINA_JVM_XMX        | 最大堆大小(kb)      |   数字类型    |  512*1024kb~内存上限 | 内存上限3/4    |
-| TOMCAT_CATALINA_JVM_XSS        | 每个线程的栈大小(kb)      |   数字类型    |  128k以上 |  1024kb    |
+| TOMCAT_CATALINA_JVM_XSS        | 每个线程栈大小(kb)      |   数字类型    |  128k以上 |  1024kb    |
 * 单位统一为kb
 
 # 二.ZOOKEEPER
@@ -89,6 +89,7 @@
 | REDIS_APPEND_FSYNC        | appendonlylog如何同步到磁盘     |   可选型    |  always/everysec/no  | everysec |
 | REDIS_MAXMEMORY        | 可使用的最大内存,单位kb     |   数字类型    |  正整数  | 0 |
 | REDIS_MAXMEMORY_POLICY        | 内存不足时,数据清除策略     |   可选型    |  volatile-lru/allkeys-lru/volatile-random/allkeys-random/volatile-ttl/noeviction| volatile-lru|
+| REDIS_PASSWORD        | redis认证密码   |   字符串类型    |  字符串 | "" |
 <!--| REDIS_MIN_SLAVES_TO_WRITE        |    |   数字类型    |  正整数 |  |-->
 <!--| REDIS_MIN_SLAVES_MAX_LAG        |    |   数字类型    |  正整数 |  |-->
 
@@ -96,14 +97,17 @@
 ## 2.哨兵节点配置（原每个哨兵可配置多个master, 基于目前1主2从3哨兵的方式，每个哨兵配置一个master）
 | 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
 | --------   | :-----   | :----: | :----: |:----: |
-| REDIS_SENTINEL_MASTER_NAME      |  master节点名称     |   字符串    |  字符串  | "mymaster" |
-| REDIS_SENTINEL_MASTER_HOST       |  master节点主机     |   字符串    | 字符串   | "127.0.0.1" |
-| REDIS_SENTINEL_MASTER_PORT       |  master节点端口     |   字符串    |  1024~65535  | 6379 |
-| REDIS_SENTINEL_MASTER_QUORUM       |  quorum投票数     |   数字类型    |  正整数  | 2 |
 | REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS       |  连接失效时间    |   数字类型    |   正整数 | 30000 |
 | REDIS_SENTINEL_FAILOVER_TIMEOUT        | failover超时时间     |   数字类型    |  正整数 | 180000|
 | REDIS_SENTINEL_PARALLEL_SYNCS        | 同步库个数   |   数字类型    |  正整数 | 1 |
 | REDIS_SENTINEL_PASSWORD        | redis认证密码   |   字符串类型    |  字符串 | "" |
+
+<!--| REDIS_SENTINEL_MASTER_NAME      |  master节点名称     |   字符串    |  字符串  | "mymaster" |-->
+<!--| REDIS_SENTINEL_MASTER_HOST       |  master节点主机     |   字符串    | 字符串   | "127.0.0.1" |-->
+<!--| REDIS_SENTINEL_MASTER_PORT       |  master节点端口     |   字符串    |  1024~65535  | 6379 |-->
+<!--| REDIS_SENTINEL_MASTER_QUORUM       |  quorum投票数     |   数字类型    |  正整数  | 2 |-->
+
+
 
 * 时间单位为毫秒
 
