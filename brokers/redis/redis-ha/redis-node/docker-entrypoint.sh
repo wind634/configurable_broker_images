@@ -5,6 +5,7 @@
 # REDIS_APPEND_FSYNC    appendonlylog如何同步到磁盘  always/everysec/no
 # REDIS_MAXMEMORY   可使用的最大内存
 # REDIS_MAXMEMORY_POLICY    内存不足时,数据清除策略    volatile-lru / allkeys-lru / volatile-random / allkeys-random / volatile-ttl /  noeviction
+# REDIS_PASSWORD 密码
 
 # REDIS_MIN_SLAVES_TO_WRITE
 # REDIS_MIN_SLAVES_MAX_LAG
@@ -238,6 +239,11 @@ if [ "$1" = 'redis-server' -a "$(id -u)" = '0' ]; then
                 if [ "$pass" = "T" ];then
                     echo  "maxmemory-policy $REDIS_MAXMEMORY_POLICY" >> "$CONFIG"
                 fi
+            fi
+
+            file_env 'REDIS_PASSWORD'
+            if [ -n "$REDIS_PASSWORD" ];then
+                echo  "requirepass $REDIS_PASSWORD" >> "$CONFIG"
             fi
 
             # ========= 比较特殊的两个配置 =============
