@@ -50,10 +50,10 @@
 ## 1.zookeeper 配置
 | 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
 | --------   | :-----   | :----: | :----: | :----: |
-| ZOO_TICK_TIME        | server端通信心跳间隔时间, 以毫秒为单位      |   数字类型   | 正整数 | 2000 |
-| ZOO_INIT_LIMIT        | 集群中的follower和leader初始连接时能容忍的最多心跳数（tickTime的数量）     |   数字类型    | 正整数  | 5 |
-| ZOO_SYNC_LIMIT        | 集群中的follower服务器与leader服务器之间请求和应答之间能容忍的最多心跳数   |   数字类型    |  正整数 |  2 |
-| ZOO_SERVERS        | 集群的server配置      |   字符串类型    |  字符串 | "" |
+| ZOO_TICK_TIME        | [心跳间隔时间]  server端通信心跳间隔时间, 以毫秒为单位      |   数字类型   | 正整数 | 2000 |
+| ZOO_INIT_LIMIT        | [连接最大心跳数]  集群中的follower和leader初始连接时能容忍的最多心跳数（tickTime的数量）     |   数字类型    | 正整数  | 5 |
+| ZOO_SYNC_LIMIT        | [同步最大心跳数]  集群中的follower服务器与leader服务器之间请求和应答之间能容忍的最多心跳数   |   数字类型    |  正整数 |  2 |
+| ZOO_SERVERS        | [集群服务器配置]  集群的server配置      |   字符串类型    |  字符串 | "" |
 
 * ZOO_SERVERS配置示例: `server.1=zoo1:2888:3888,server.2=zoo2:2888:3888,server.3=zoo3:2888:3888`
 
@@ -62,8 +62,9 @@
 | --------   | -----   | :----: | :----: | :----: |
 | ZOO_JVM_XMS        | 初始堆大小(kb)      |   数字类型    |  64*1024~内存上限 |  内存限制3/4   |
 | ZOO_JVM_XMX        | 最大堆大小(kb)      |   数字类型    |  64*1024~内存上限 |  内存限制3/4   |
-| ZOO_JVM_XSS        | 每个线程的栈大小(kb)      |   数字类型    |  228kb以上 |  1024kb  |
+| ZOO_JVM_XSS        | 每个线程栈大小(kb)      |   数字类型    |  228kb以上 |  1024kb  |
 
+* 单位统一为kb
 
 # 三.MYSQL
 
@@ -72,8 +73,8 @@
 | --------   | :-----   | :----: | :----: |:----: |
 | MYSQL_MAX_CONNECTIONS       | 最大连接数     |   数字类型    |   正整数 | 100 |
 | MYSQL_QUERY_CACHE_SIZE        | 查询缓存大小     |   数字类型    |  0~小于内存上限 | 0|
-| MYSQL_CONNECT_TIMEOUT        | 连握手的超时时间   |   数字类型    |  自然数 | 10 |
-| MYSQL_WAIT_TIMEOUT        | 服务器关闭非交互连接之前等待活动秒数      |   数字类型    |  正整数  | 28800|
+| MYSQL_CONNECT_TIMEOUT        | 连接超时时间   |   数字类型    |  自然数 | 10 |
+| MYSQL_WAIT_TIMEOUT        | 等待超时时间    |   数字类型    |  正整数  | 28800|
 
 * 时间单位统一为秒，内存大小单位统一为kb
 
@@ -88,27 +89,29 @@
 | REDIS_APPEND_FSYNC        | appendonlylog如何同步到磁盘     |   可选型    |  always/everysec/no  | everysec |
 | REDIS_MAXMEMORY        | 可使用的最大内存,单位kb     |   数字类型    |  正整数  | 0 |
 | REDIS_MAXMEMORY_POLICY        | 内存不足时,数据清除策略     |   可选型    |  volatile-lru/allkeys-lru/volatile-random/allkeys-random/volatile-ttl/noeviction| volatile-lru|
-| REDIS_MIN_SLAVES_TO_WRITE        |    |   数字类型    |  正整数 |  |
-| REDIS_MIN_SLAVES_MAX_LAG        |    |   数字类型    |  正整数 |  |
+<!--| REDIS_MIN_SLAVES_TO_WRITE        |    |   数字类型    |  正整数 |  |-->
+<!--| REDIS_MIN_SLAVES_MAX_LAG        |    |   数字类型    |  正整数 |  |-->
 
 
 ## 2.哨兵节点配置（原每个哨兵可配置多个master, 基于目前1主2从3哨兵的方式，每个哨兵配置一个master）
 | 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
 | --------   | :-----   | :----: | :----: |:----: |
-| REDIS_SENTINEL_MASTER_NAME_0       |  master节点名称     |   字符串    |    |  |
-| REDIS_SENTINEL_MASTER_HOST_0       |  master节点host/ip     |   字符串    |    |  |
-| REDIS_SENTINEL_MASTER_PORT_0       |  master节点port     |   字符串    |    |  |
-| REDIS_SENTINEL_MASTER_QUORUM_0       |  master节点quorum     |   字符串    |    |  |
-| REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS_0       |  连接失效时间,毫秒     |   数字类型    |   正整数 | 30000 |
-| REDIS_SENTINEL_FAILOVER_TIMEOUT_0        | failover超时时间     |   数字类型    |  正整数 | |
-| REDIS_SENTINEL_PARALLEL_SYNCS_0        | 进行同步的slave个数   |   数字类型    |  正整数 |  |
-| REDIS_SENTINEL_PASSWORD_0        | redis认证密码   |   字符串类型    |   |  |
+| REDIS_SENTINEL_MASTER_NAME      |  master节点名称     |   字符串    |  字符串  | "mymaster" |
+| REDIS_SENTINEL_MASTER_HOST       |  master节点主机     |   字符串    | 字符串   | "127.0.0.1" |
+| REDIS_SENTINEL_MASTER_PORT       |  master节点端口     |   字符串    |  1024~65535  | 6379 |
+| REDIS_SENTINEL_MASTER_QUORUM       |  quorum投票数     |   数字类型    |  正整数  | 2 |
+| REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS       |  连接失效时间    |   数字类型    |   正整数 | 30000 |
+| REDIS_SENTINEL_FAILOVER_TIMEOUT        | failover超时时间     |   数字类型    |  正整数 | 180000|
+| REDIS_SENTINEL_PARALLEL_SYNCS        | 同步库个数   |   数字类型    |  正整数 | 1 |
+| REDIS_SENTINEL_PASSWORD        | redis认证密码   |   字符串类型    |  字符串 | "" |
+
+* 时间单位为毫秒
 
 ## 3.haproxy配置
 
 | 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
 | --------   | :-----   | :----: | :----: |:----: |
-| HAPROXY_BALANCE       |  负载均衡算法   |   字符串    |  roundrobin/source  | roundrobin |
+| HAPROXY_BALANCE       |  负载均衡算法   |   字符串    |  roundrobin / static-rr / leastconn / source / uri / url_param / hdr / rdp-cookie  | roundrobin |
 
 
 # 五.JAVA
@@ -118,5 +121,5 @@
 | --------   | -----   | :----: | :----: | :----: |
 | JVM_XMS        | 初始堆大小(kb)      |   数字类型    |  64*1024~内存上限 |  内存限制3/4   |
 | JVM_XMX        | 最大堆大小(kb)      |   数字类型    |  64*1024~内存上限 |  内存限制3/4   |
-| JVM_XSS        | 每个线程的栈大小(kb)      |   数字类型    |  228kb以上 |    |
+| JVM_XSS        | 每个线程栈大小(kb)      |   数字类型    |  228kb以上 |    |
 
