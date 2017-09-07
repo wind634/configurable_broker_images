@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 sed -i "s/{{maxconn}}/${HAPROXY_MAXCONN}/g" /usr/local/etc/haproxy/haproxy.cfg
 sed -i "s/{{conn_timeout}}/${HAPROXY_CONNECT_TIMEOUT}/g" /usr/local/etc/haproxy/haproxy.cfg
 sed -i "s/{{server_timeout}}/${HAPROXY_SERVER_TIMEOUT}/g" /usr/local/etc/haproxy/haproxy.cfg
