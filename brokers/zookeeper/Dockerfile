@@ -1,4 +1,4 @@
-FROM 31z4/zookeeper
+FROM 31z4/zookeeper:3.4.10
 
 ENV ZOO_USER=zookeeper \
     ZOO_CONF_DIR=/conf \
