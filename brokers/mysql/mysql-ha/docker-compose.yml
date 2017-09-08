@@ -6,15 +6,19 @@ services:
     labels:
       - "io.daocloud.dce.service.role=master"
       - "io.daocloud.dce.service.console=true"
-      - io.daocloud.dce.compose.placement.constraints=["node.labels.{{ MACHINE1_LABLE }}"]
+      - io.daocloud.dce.compose.placement.constraints=["node.labels.{{MACHINE1_LABLE}}"]
     environment:
       - STARTORDER=0
       - REPLICATION_MASTER='true'
       # Default User is 'admin'
-      - MYSQL_USER={{ mysql_root_user }}
+      - MYSQL_USER={{mysql_root_user}}
       # Specify 'admin' Password Below
-      - MYSQL_PASS={{ mysql_user_pass }}
-      - ON_CREATE_DB={{ default_db }}
+      - MYSQL_PASS={{mysql_user_pass}}
+      - ON_CREATE_DB={{default_db}}
+      - MYSQL_MAX_CONNECTIONS={{MYSQL_MAX_CONNECTIONS}}
+      - MYSQL_QUERY_CACHE_SIZE={{MYSQL_QUERY_CACHE_SIZE}}
+      - MYSQL_CONNECT_TIMEOUT={{MYSQL_CONNECT_TIMEOUT}}
+      - MYSQL_WAIT_TIMEOUT={{MYSQL_WAIT_TIMEOUT}}
     ports:
       - '3306'
     volumes:
@@ -26,20 +30,24 @@ services:
     user: root
     labels:
       - "io.daocloud.dce.service.role=slave"
-      - io.daocloud.dce.compose.placement.constraints=["node.labels.{{ MACHINE2_LABLE }}"]
+      - io.daocloud.dce.compose.placement.constraints=["node.labels.{{MACHINE2_LABLE}}"]
     environment:
       - ADDRESS=mysql:3306
       - STARTORDER=1
       - REPLICATION_SLAVE='true'
       # Default User is 'admin'
-      - MYSQL_USER={{ mysql_root_user }}
+      - MYSQL_USER={{mysql_root_user}}
       # Specify 'admin'  Password Below
-      - MYSQL_PASS={{ mysql_user_pass }}
+      - MYSQL_PASS={{mysql_user_pass}}
       - MYSQL_PORT_3306_TCP_ADDR=mysql
       - MYSQL_PORT_3306_TCP_PORT=3306
-      - MYSQL_ENV_REPLICATION_USER={{ mysql_root_user }}
-      - MYSQL_ENV_REPLICATION_PASS={{ mysql_user_pass }}
-      - ON_CREATE_DB={{ default_db }}
+      - MYSQL_ENV_REPLICATION_USER={{mysql_root_user}}
+      - MYSQL_ENV_REPLICATION_PASS={{mysql_user_pass}}
+      - ON_CREATE_DB={{default_db}}
+      - MYSQL_MAX_CONNECTIONS={{MYSQL_MAX_CONNECTIONS}}
+      - MYSQL_QUERY_CACHE_SIZE={{MYSQL_QUERY_CACHE_SIZE}}
+      - MYSQL_CONNECT_TIMEOUT={{MYSQL_CONNECT_TIMEOUT}}
+      - MYSQL_WAIT_TIMEOUT={{MYSQL_WAIT_TIMEOUT}}
     ports:
       - '3306'
     volumes:
@@ -50,16 +58,16 @@ volumes:
   ve:
       driver: rexray
       driver_opts:
-        size: {{ VOLUMESIZE }}
+        size: {{VOLUMESIZE}}
   vd:
       driver: rexray
       driver_opts:
-        size: {{ VOLUMESIZE }}
+        size: {{VOLUMESIZE}}
   se:
       driver: rexray
       driver_opts:
-        size: {{ VOLUMESIZE }}
+        size: {{VOLUMESIZE}}
   sd:
       driver: rexray
       driver_opts:
-        size: {{ VOLUMESIZE }}
+        size: {{VOLUMESIZE}}
