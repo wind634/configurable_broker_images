@@ -1,7 +1,7 @@
 version: '3'
 services:
   haproxy:
-    image: wind634/haproxy-redis
+    image: wind634/haproxy-redis:ha
     labels:
       - "io.daocloud.dce.service.role=proxy"
       - "io.daocloud.dce.service.console=true"
@@ -21,7 +21,7 @@ services:
       - HAPROXY_CLIENT_TIMEOUT=50000
       - HAPROXY_BALANCE=roundrobin
   master:
-    image: wind634/redis
+    image: wind634/redis:ha
     command: --appendonly yes --masterauth {{PASSWORD}}
     labels:
       - "io.daocloud.dce.service.role=master"
@@ -40,7 +40,7 @@ services:
       - REDIS_MAXMEMORY_POLICY=volatile-lru
       - REDIS_PASSWORD={{PASSWORD}}
   slave:
-    image: wind634/redis
+    image: wind634/redis:ha
     labels:
       - "io.daocloud.dce.service.role=slave"
       - "io.daocloud.dce.compose.endpoint-spec.mode=dnsrr"
@@ -62,7 +62,7 @@ services:
     depends_on:
       - master
   slave1:
-    image: wind634/redis
+    image: wind634/redis:ha
     labels:
       - "io.daocloud.dce.service.role=slave"
       - "io.daocloud.dce.compose.endpoint-spec.mode=dnsrr"
@@ -84,7 +84,7 @@ services:
     depends_on:
       - master
   sentinel0:
-    image: wind634/redis-sentinel
+    image: wind634/redis-sentinel:ha
     labels:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool1 == servicepool1", "node.labels.redis == redis"]
     ports:
@@ -103,7 +103,7 @@ services:
       - slave1
 #    cpu_quota: 50000
   sentinel1:
-    image: wind634/redis-sentinel
+    image: wind634/redis-sentinel:ha
     labels:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool2 == servicepool2", "node.labels.redis == redis"]
     ports:
@@ -122,7 +122,7 @@ services:
       - slave1
 #    cpu_quota: 50000
   sentinel2:
-    image: wind634/redis-sentinel
+    image: wind634/redis-sentinel:ha
     labels:
       - io.daocloud.dce.compose.placement.constraints=["node.labels.servicepool3 == servicepool3", "node.labels.redis == redis"]
     ports:
