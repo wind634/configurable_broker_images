@@ -1,7 +1,7 @@
 version: '2'
 services:
   tomcat:
-    image: wind634/tomcat
+    image: wind634/tomcat:8.5.15
     cpu_quota: 50000
     environment:
         - TOMCAT_PASS={{ password }}
