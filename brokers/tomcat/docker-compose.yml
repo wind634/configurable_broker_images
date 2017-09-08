@@ -1,0 +1,36 @@
+version: '2'
+services:
+  tomcat:
+    image: wind634/tomcat
+    cpu_quota: 50000
+    environment:
+        - TOMCAT_PASS={{ password }}
+        - MAXMEMORY={{maxmemory}}
+        - MINMEMORY={{minmemory}}
+
+        - TOMCAT_SERVER_URI_ENCODING={{TOMCAT_SERVER_URI_ENCODING}}
+        - TOMCAT_SERVER_CONNECTION_TIMEOUT={{TOMCAT_SERVER_CONNECTION_TIMEOUT}}
+        - TOMCAT_SERVER_MAX_THREADS={{TOMCAT_SERVER_MAX_THREADS}}
+        - TOMCAT_SERVER_MIN_SPARE_THREADS={{TOMCAT_SERVER_MIN_SPARE_THREADS}}
+        - TOMCAT_SERVER_DISABLE_UPLOAD_TIMEOUT={{TOMCAT_SERVER_DISABLE_UPLOAD_TIMEOUT}}
+        - TOMCAT_SERVER_CONNECTION_UPLOAD_TIMEOUT={{TOMCAT_SERVER_CONNECTION_UPLOAD_TIMEOUT}}
+        - TOMCAT_SERVER_ENABLE_LOOKUPS={{TOMCAT_SERVER_ENABLE_LOOKUPS}}
+        - TOMCAT_SERVER_KEEP_ALIVE_TIMEOUT={{TOMCAT_SERVER_KEEP_ALIVE_TIMEOUT}}
+        - TOMCAT_SERVER_COMPRESSION={{TOMCAT_SERVER_COMPRESSION}}
+        - TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE={{TOMCAT_SERVER_COMPRESSABLE_MIME_TYPE}}
+
+        - TOMCAT_CONTEXT_RESOURCE={{TOMCAT_CONTEXT_RESOURCE}}
+
+        - TOMCAT_CATALINA_JVM_XMS={{TOMCAT_CATALINA_JVM_XMS}}
+        - TOMCAT_CATALINA_JVM_XMX={{TOMCAT_CATALINA_JVM_XMX}}
+        - TOMCAT_CATALINA_JVM_XSS={{TOMCAT_CATALINA_JVM_XSS}}
+
+    labels:
+        - io.daocloud.dce.service.role=master
+        - io.daocloud.dce.service.console=true
+        - io.daocloud.dce.compose.placement.constraints=["node.labels.tomcat == tomcat"]
+    volumes:
+        - /tomcat
+    ports:
+        - '8080'
+    restart: always
