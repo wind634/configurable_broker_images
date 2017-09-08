@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   mysql:
     image: wind634/mysql
@@ -21,10 +21,10 @@ services:
       - MYSQL_WAIT_TIMEOUT={{MYSQL_WAIT_TIMEOUT}}
     ports:
       - '3306'
-    volumes:
-      - ve:/etc/mysql
-      - vd:/var/lib/mysql
-    cpu_quota: 50000
+#    volumes:
+#      - ve:/etc/mysql
+#      - vd:/var/lib/mysql
+#    cpu_quota: 50000
   mysql-slave:
     image: wind634/mysql
     user: root
@@ -50,24 +50,24 @@ services:
       - MYSQL_WAIT_TIMEOUT={{MYSQL_WAIT_TIMEOUT}}
     ports:
       - '3306'
-    volumes:
-      - se:/etc/mysql
-      - sd:/var/lib/mysql
-    cpu_quota: 50000
-volumes:
-  ve:
-      driver: rexray
-      driver_opts:
-        size: {{VOLUMESIZE}}
-  vd:
-      driver: rexray
-      driver_opts:
-        size: {{VOLUMESIZE}}
-  se:
-      driver: rexray
-      driver_opts:
-        size: {{VOLUMESIZE}}
-  sd:
-      driver: rexray
-      driver_opts:
-        size: {{VOLUMESIZE}}
+#    volumes:
+#      - se:/etc/mysql
+#      - sd:/var/lib/mysql
+#    cpu_quota: 50000
+#volumes:
+#  ve:
+#      driver: rexray
+#      driver_opts:
+#        size: {{VOLUMESIZE}}
+#  vd:
+#      driver: rexray
+#      driver_opts:
+#        size: {{VOLUMESIZE}}
+#  se:
+#      driver: rexray
+#      driver_opts:
+#        size: {{VOLUMESIZE}}
+#  sd:
+#      driver: rexray
+#      driver_opts:
+#        size: {{VOLUMESIZE}}

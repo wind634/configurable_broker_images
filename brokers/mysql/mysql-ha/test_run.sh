@@ -2,6 +2,8 @@
 
 # 此脚本测试docker-compose.yml编排的mysql服务是否可用
 
+appname="wangjiang"
+
 # 要替换的参数有
 # appname  app名称
 # PASSWORD  通信密码
@@ -13,10 +15,10 @@ TMP_COMPOSE_PATH="./temp_docker-compose.yml"
 MACHINE1_LABLE="label1"
 mysql_root_user="root"
 mysql_user_pass="123456"
-default_db=""
+default_db="wangjiang"
 
 MYSQL_MAX_CONNECTIONS="2222"
-MYSQL_QUERY_CACHE_SIZE="10m"
+MYSQL_QUERY_CACHE_SIZE="10000"
 MYSQL_CONNECT_TIMEOUT="222"
 MYSQL_WAIT_TIMEOUT="222000"
 
