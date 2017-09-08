@@ -317,7 +317,7 @@ echo $serverStr
 # 将serverStr替换进server.xml文件里
 sedCmd="s/{{serverArgs}}/${serverStr}/"
 echo "$sedCmd"
-sed -i "$sedCmd" /usr/local/tomcat/conf/server.xml
+sed -i "$sedCmd" $CATALINA_HOME/conf/server.xml
 # ============== server.xml 配置 ==============
 
 # ============== content.xml 配置 ==============
@@ -404,7 +404,7 @@ echo "contextStr:"$contextStr
 # 将serverStr替换进server.xml文件里
 sedCmd="s/{{Resource}}/${contextStr}/"
 echo "$sedCmd"
-sed -i "$sedCmd" /usr/local/tomcat/conf/context.xml
+sed -i "$sedCmd" $CATALINA_HOME/conf/context.xml
 
 # ============== content.xml 配置 ==============
 
@@ -471,7 +471,7 @@ echo $catalinaStr
 
 sedCmd="s/{{JAVA_OPTS}}/${catalinaStr}/"
 echo "$sedCmd"
-sed -i "$sedCmd" /usr/local/tomcat/bin/catalina.sh
+sed -i "$sedCmd" $CATALINA_HOME/bin/catalina.sh
 # ============== catalina.sh 配置 ==============
 
 
