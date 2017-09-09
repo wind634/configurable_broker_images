@@ -3,15 +3,11 @@
 # 此脚本测试docker-compose.yml编排的mysql服务是否可用
 
 appname="wangjiang"
-
-# 要替换的参数有
-# appname  app名称
-# PASSWORD  通信密码
-# REDIS_MAXMEMORY   最大内存
 COMPOSE_PATH="./docker-compose.yml"
 TMP_COMPOSE_PATH="./temp_docker-compose.yml"
 
-# 替换的变量
+# 要替换的参数有
+
 MACHINE1_LABLE="label1"
 mysql_root_user="slave"
 mysql_user_pass="123456"
