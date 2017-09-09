@@ -15,6 +15,8 @@ services:
       # Specify 'admin' Password Below
       - MYSQL_PASS={{mysql_user_pass}}
       - ON_CREATE_DB={{default_db}}
+
+      # 新增的配置参数
       - MYSQL_MAX_CONNECTIONS={{MYSQL_MAX_CONNECTIONS}}
       - MYSQL_QUERY_CACHE_SIZE={{MYSQL_QUERY_CACHE_SIZE}}
       - MYSQL_CONNECT_TIMEOUT={{MYSQL_CONNECT_TIMEOUT}}
@@ -44,6 +46,8 @@ services:
       - MYSQL_ENV_REPLICATION_USER={{mysql_root_user}}
       - MYSQL_ENV_REPLICATION_PASS={{mysql_user_pass}}
       - ON_CREATE_DB={{default_db}}
+
+      # 新增的配置参数
       - MYSQL_MAX_CONNECTIONS={{MYSQL_MAX_CONNECTIONS}}
       - MYSQL_QUERY_CACHE_SIZE={{MYSQL_QUERY_CACHE_SIZE}}
       - MYSQL_CONNECT_TIMEOUT={{MYSQL_CONNECT_TIMEOUT}}

@@ -13,7 +13,7 @@ TMP_COMPOSE_PATH="./temp_docker-compose.yml"
 
 # 替换的变量
 MACHINE1_LABLE="label1"
-mysql_root_user="root"
+mysql_root_user="slave"
 mysql_user_pass="123456"
 default_db="wangjiang"
 
@@ -63,7 +63,7 @@ sed -i "$sedCmd" $TMP_COMPOSE_PATH
 sedCmd="s/{{VOLUMESIZE}}/${VOLUMESIZE}/g"
 sed -i "$sedCmd" $TMP_COMPOSE_PATH
 
-#docker-compose  -f "${TMP_COMPOSE_PATH}" up -d
+
 # swarm模式
 #docker swarm init
 docker stack deploy -c "$TMP_COMPOSE_PATH" "$appname"
