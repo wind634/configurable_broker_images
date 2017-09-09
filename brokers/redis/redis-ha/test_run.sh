@@ -2,16 +2,36 @@
 
 # 此脚本测试docker-compose.yml编排的redis服务是否可用
 
-# 要替换的参数有
-# appname  app名称
-# PASSWORD  通信密码
-# REDIS_MAXMEMORY   最大内存
+appname="redis_test"
 COMPOSE_PATH="./docker-compose.yml"
 TMP_COMPOSE_PATH="./temp_docker-compose.yml"
 
-appname="wind_test"
+# 要替换的参数有
+
+# 集群密码
 PASSWORD="123456"
-# 100m
+
+#haproxy 参数
+HAPROXY_MAXCONN=4096
+HAPROXY_CONNECT_TIMEOUT=5000
+HAPROXY_SERVER_TIMEOUT=52000
+HAPROXY_CLIENT_TIMEOUT=50000
+HAPROXY_BALANCE=roundrobin
+
+# redis-node M/R 参数
+REDIS_TIMEOUT="2000"
+REDIS_MAXMEMORY=""
+REDIS_RDB_COMPRESSION=""
+REDIS_APPEND_ONLY=""
+REDIS_APPEND_FSYNC=""
+REDIS_MAXMEMORY_POLICY=""
+
+# redis-sentinel参数
+REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS="33333"
+REDIS_SENTINEL_PARALLEL_SYNCS=""
+REDIS_SENTINEL_FAILOVER_TIMEOUT=""
+
+# REDIS_MAXMEMORY   最大内存
 REDIS_MAXMEMORY="102400"
 
 if [  -f "$TMP_COMPOSE_PATH" ]; then
@@ -26,10 +46,48 @@ sed -i "$sedCmd" $TMP_COMPOSE_PATH
 sedCmd="s/{{PASSWORD}}/${PASSWORD}/g"
 sed -i "$sedCmd" $TMP_COMPOSE_PATH
 
+sedCmd="s/{{HAPROXY_MAXCONN}}/${HAPROXY_MAXCONN}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{HAPROXY_CONNECT_TIMEOUT}}/${HAPROXY_CONNECT_TIMEOUT}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{HAPROXY_SERVER_TIMEOUT}}/${HAPROXY_SERVER_TIMEOUT}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{HAPROXY_CLIENT_TIMEOUT}}/${HAPROXY_CLIENT_TIMEOUT}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{HAPROXY_BALANCE}}/${HAPROXY_BALANCE}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{REDIS_TIMEOUT}}/${REDIS_TIMEOUT}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
 sedCmd="s/{{REDIS_MAXMEMORY}}/${REDIS_MAXMEMORY}/g"
 sed -i "$sedCmd" $TMP_COMPOSE_PATH
 
-#docker-compose  -f "${TMP_COMPOSE_PATH}" up -d
+sedCmd="s/{{REDIS_RDB_COMPRESSION}}/${REDIS_RDB_COMPRESSION}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{REDIS_APPEND_ONLY}}/${REDIS_APPEND_ONLY}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{REDIS_APPEND_FSYNC}}/${REDIS_APPEND_FSYNC}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{REDIS_MAXMEMORY_POLICY}}/${REDIS_MAXMEMORY_POLICY}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS}}/${REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{REDIS_SENTINEL_PARALLEL_SYNCS}}/${REDIS_SENTINEL_PARALLEL_SYNCS}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
+sedCmd="s/{{REDIS_SENTINEL_FAILOVER_TIMEOUT}}/${REDIS_SENTINEL_FAILOVER_TIMEOUT}/g"
+sed -i "$sedCmd" $TMP_COMPOSE_PATH
+
 # swarm模式
 #docker swarm init
 docker stack deploy -c "$TMP_COMPOSE_PATH" "$appname"
