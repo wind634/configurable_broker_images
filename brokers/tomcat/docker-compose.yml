@@ -1,10 +1,10 @@
-version: '2'
+version: '3'
 services:
   tomcat:
     image: wind634/tomcat:8.5.15
-    cpu_quota: 50000
+#    cpu_quota: 50000
     environment:
-        - TOMCAT_PASS={{ password }}
+        - TOMCAT_PASS={{password}}
         - MAXMEMORY={{maxmemory}}
         - MINMEMORY={{minmemory}}
 
