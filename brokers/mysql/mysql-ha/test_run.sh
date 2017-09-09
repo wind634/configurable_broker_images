@@ -2,7 +2,7 @@
 
 # 此脚本测试docker-compose.yml编排的mysql服务是否可用
 
-appname="wangjiang"
+appname="mysql_test"
 COMPOSE_PATH="./docker-compose.yml"
 TMP_COMPOSE_PATH="./temp_docker-compose.yml"
 
