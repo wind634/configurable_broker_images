@@ -11,9 +11,9 @@ services:
             ZOO_MY_ID: 1
             ZOO_SERVERS: server.1=zoo1:2888:3888,server.2=zoo2:2888:3888,server.3=zoo3:2888:3888
             # zookeeper一般配置
-            ZOO_TICK_TIME: 4000
-            ZOO_INIT_LIMIT: 10
-            ZOO_SYNC_LIMIT: 4
+            ZOO_TICK_TIME: 2000
+            ZOO_INIT_LIMIT: 5
+            ZOO_SYNC_LIMIT: 2
             # zookeeper的jvm的配置
             ZOO_JVM_XMS: 102400
             ZOO_JVM_XMX: 102400
@@ -29,9 +29,9 @@ services:
             ZOO_MY_ID: 2
             ZOO_SERVERS: server.1=zoo1:2888:3888,server.2=zoo2:2888:3888,server.3=zoo3:2888:3888
              # zookeeper一般配置
-            ZOO_TICK_TIME: 4000
-            ZOO_INIT_LIMIT: 10
-            ZOO_SYNC_LIMIT: 4
+            ZOO_TICK_TIME: 2000
+            ZOO_INIT_LIMIT: 5
+            ZOO_SYNC_LIMIT: 2
             # zookeeper的jvm的配置
             ZOO_JVM_XMS: 102400
             ZOO_JVM_XMX: 102400
@@ -47,9 +47,9 @@ services:
             ZOO_MY_ID: 3
             ZOO_SERVERS: server.1=zoo1:2888:3888,server.2=zoo2:2888:3888,server.3=zoo3:2888:3888
             # zookeeper一般配置
-            ZOO_TICK_TIME: 4000
-            ZOO_INIT_LIMIT: 10
-            ZOO_SYNC_LIMIT: 4
+            ZOO_TICK_TIME: 2000
+            ZOO_INIT_LIMIT: 5
+            ZOO_SYNC_LIMIT: 2
             # zookeeper的jvm的配置
             ZOO_JVM_XMS: 102400
             ZOO_JVM_XMX: 102400
