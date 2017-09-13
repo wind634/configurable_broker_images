@@ -29,7 +29,6 @@
 
 # ====== catalina.sh 涉及的环境变量 end ======
 
-echo "aaaa"
 
 val=""
 
