@@ -60,11 +60,11 @@
 ## 2.zookeeper jvm配置
 | 环境变量名称        |   描述    |  类型  |  取值范围 | 默认值
 | --------   | -----   | :----: | :----: | :----: |
-| ZOO_JVM_XMS        | 初始堆大小(kb)      |   数字类型    |  64*1024~内存上限 |  内存限制3/4   |
-| ZOO_JVM_XMX        | 最大堆大小(kb)      |   数字类型    |  64*1024~内存上限 |  内存限制3/4   |
-| ZOO_JVM_XSS        | 每个线程栈大小(kb)      |   数字类型    |  228kb以上 |  1024kb  |
+| ZOO_JVM_XMS        | 初始堆大小(kb)      |   数字类型    |  64*1024~内存上限 |  64   |
+| ZOO_JVM_XMX        | 最大堆大小(kb)      |   数字类型    |  64*1024~内存上限 |  64   |
+| ZOO_JVM_XSS        | 每个线程栈大小(kb)      |   数字类型    |  228kb以上 |  1  |
 
-* 单位统一为kb
+* 单位统一为M
 
 # 三.MYSQL
 
@@ -89,7 +89,6 @@
 | REDIS_APPEND_FSYNC        | appendonlylog如何同步到磁盘     |   可选型    |  always/everysec/no  | everysec |
 | REDIS_MAXMEMORY        | 可使用的最大内存,单位kb     |   数字类型    |  正整数  | 0 |
 | REDIS_MAXMEMORY_POLICY        | 内存不足时,数据清除策略     |   可选型    |  volatile-lru/allkeys-lru/volatile-random/allkeys-random/volatile-ttl/noeviction| volatile-lru|
-| REDIS_PASSWORD        | redis认证密码   |   字符串类型    |  字符串 | "" |
 
 
 ## 2.哨兵节点配置（原每个哨兵可配置多个master, 基于目前1主2从3哨兵的方式，每个哨兵配置一个master）
@@ -98,7 +97,7 @@
 | REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS       |  连接失效时间    |   数字类型    |   正整数 | 30000 |
 | REDIS_SENTINEL_FAILOVER_TIMEOUT        | failover超时时间     |   数字类型    |  正整数 | 180000|
 | REDIS_SENTINEL_PARALLEL_SYNCS        | 同步库个数   |   数字类型    |  正整数 | 1 |
-| REDIS_SENTINEL_PASSWORD        | redis认证密码   |   字符串类型    |  字符串 | "" |
+| REDIS_AUTH_PASSWORD        | redis认证密码   |   字符串类型    |  字符串 | "" |
 
 * 时间单位为毫秒
 
@@ -111,6 +110,7 @@
 | HAPROXY_CLIENT_TIMEOUT       |  客户端超时   |  数字类型    |  正整数  | 50000 |
 | HAPROXY_SERVER_TIMEOUT       |  服务器超时   |   数字类型   |  正整数  | 50000 |
 | HAPROXY_BALANCE    |  负载均衡算法   |   可选型    |  roundrobin / static-rr / leastconn / source / uri / url_param / hdr / rdp-cookie  | roundrobin |
+| REDIS_AUTH_PASSWORD        | redis认证密码(同哨兵节点)   |   字符串类型    |  字符串 | "" |
 
 * 时间单位为毫秒
 
